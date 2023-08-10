@@ -29,7 +29,7 @@ For one file in one translation unit, you need to define some macros before incl
 #include "arena.h"
 ```
 
-After doing this in **one** file in **one** translation unit, for **every other file** you can include normally with a lone `#include "arena.h"`.
+After doing this in **one** file in **one** translation unit, for **any other file** you can include normally with a lone `#include "arena.h"`.
 
 ### Example
 `code.c`
