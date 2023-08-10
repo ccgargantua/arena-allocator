@@ -87,6 +87,7 @@ void* arena_alloc(Arena *arena, size_t size)
     {
         return NULL;    
     }
+
     arena->index += size;
     return arena->region + (arena->index - size);
 }
