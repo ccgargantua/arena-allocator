@@ -18,9 +18,11 @@ void arena_destroy(Arena *arena);
 
 #if !defined(ARENA_MALLOC) || !defined(ARENA_FREE)
 
+#ifndef ARENA_SUPPRESS_MALLOC_WARN
 #warning \
 "Using <stdlib.h> malloc and free, because a replacement for one or both \
 was not specified before including 'arena.h'."
+#endif /* !ARENA_SUPPRESS_MALLOC_WARN */
 
 #include <stdlib.h>
 #define ARENA_MALLOC malloc
