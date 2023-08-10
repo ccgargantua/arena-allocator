@@ -3,6 +3,19 @@
 
 #include <stddef.h>
 
+typedef struct
+{
+    char *region;
+    size_t index;
+    size_t size;
+} Arena;
+
+Arena* arena_create(size_t size);
+void* arena_alloc(Arena *arena, size_t size);
+void arena_destroy(Arena *arena);
+
+#ifdef ARENA_IMPLEMENTATION
+
 #if !defined(ARENA_MALLOC) || !defined(ARENA_FREE)
 
 #warning \
@@ -14,13 +27,6 @@ was not specified before including 'arena.h'."
 #define ARENA_FREE free
 
 #endif /* !defined ARENA_MALLOC, ARENA_FREE */
-
-typedef struct Arena_s
-{
-    char *region;
-    size_t index;
-    size_t size;
-} Arena;
 
 Arena* arena_create(size_t size)
 {
@@ -69,5 +75,7 @@ void arena_destroy(Arena *arena)
     }
     free(arena);
 }
+
+#endif /* ARENA_IMPLEMENTATION */
 
 #endif /* ARENA_H */
