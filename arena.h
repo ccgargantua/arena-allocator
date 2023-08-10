@@ -12,6 +12,7 @@ typedef struct
 
 Arena* arena_create(size_t size);
 void* arena_alloc(Arena *arena, size_t size);
+void arena_clear(Arena* arena);
 void arena_destroy(Arena *arena);
 
 #ifdef ARENA_IMPLEMENTATION
@@ -62,6 +63,15 @@ void* arena_alloc(Arena *arena, size_t size)
     }
     arena->index += size;
     return arena->region + (arena->index - size);
+}
+
+void arena_clear(Arena* arena)
+{
+    if(arena == NULL)
+    {
+        return;
+    }
+    arena->index = 0;
 }
 
 void arena_destroy(Arena *arena)
