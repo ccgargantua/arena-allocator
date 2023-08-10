@@ -1,3 +1,29 @@
+/*
+
+See README.md for more in-depth usage docs and an
+example.
+
+QUICK USAGE:
+  One file in one translation unit must have the
+  following before including "arena.h", replacing
+  the macro values appropriately when needed.
+
+```
+#define ARENA_IMPLEMENTATION
+
+// Either both of these...
+#define ARENA_MALLOC <stdlib_malloc_like_allocator>
+#define ARENA_FREE <stdlib_free_like_deallocator>
+// ... or just this
+#define ARENA_SUPPRESS_MALLOC_WARN // alternatively using compiler flag -D with same name
+```
+
+  After doing that, you can `#include "arena.h"`
+  And for any other file in any other translation
+  unit in the build, you can `#include "arena.h"`
+  like you normally would by itself.
+*/
+
 #ifndef ARENA_H
 #define ARENA_H
 
