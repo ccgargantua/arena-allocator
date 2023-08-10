@@ -62,6 +62,7 @@ void arena_destroy(Arena *arena)
     {
         return;
     }
+    
     if(arena->region != NULL)
     {
         free(arena->region);            
