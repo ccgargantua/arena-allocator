@@ -6,7 +6,7 @@ Single-header arena allocator written in ANSI C.
 ## About
 Arena allocators are a simple way to achieve easier, faster and safer dynamic memory management by allowing multiple allocations to be freed as a group. This is done by allocating memory in large groups and then allocating portions of that memory as needed, reducing the amount of `malloc` calls (which are slow compared to adding and subtracting from a pointer).
 
-When you destroy the arena, you free it and all of its contents, reducing the amount of `free` calls, which are also slow. Going further, you can clear arenas by simply resetting their memory pointers to `0`, allowing you to resuse them and eliminating the need for even more `malloc`'s and `free`'s.
+When you destroy the arena, you free it and all of its contents, reducing the amount of `free` calls, which are also slow. Going further, you can clear arenas by simply resetting their memory pointers to `0`, allowing you to reuse them and eliminating the need for even more `malloc`'s and `free`'s.
 
 You can learn more about arena/zone/region allocators [here](https://www.rfleury.com/p/untangling-lifetimes-the-arena-allocator).
 
