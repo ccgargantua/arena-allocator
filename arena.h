@@ -83,6 +83,11 @@ void* arena_alloc(Arena *arena, size_t size)
         return NULL;
     }
 
+    if(arena->region == NULL)
+    {
+        return NULL;
+    }
+
     if(arena->size - arena->index < size)
     {
         return NULL;    
