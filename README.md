@@ -1,4 +1,4 @@
-# arena-allocator
+# Arena Allocator
 Single-header arena allocator written in ANSI C.
 
 ---
