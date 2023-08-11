@@ -38,6 +38,7 @@ After doing this in **one** file in **one** translation unit, for **any other fi
 #include <string.h> // memcpy
 
 #define ARENA_IMPLEMENTATION
+#define ARENA_SUPPRESS_MALLOC_WARN
 #include "../arena.h"
 
 int main(void)
@@ -77,47 +78,93 @@ int main(void)
 ```
 **Build**
 ```
-$ gcc -DARENA_SUPPRESS_MALLOC_WARN -o example code.c
-$ ./example
+$ gcc -o test1 code.c
+
+$ ./test1
 > Hello world!
   Numbers 1-3: 
   1
   2
   3
 
-$ gcc -o example code.c
-> In file included from code.c:5:
-  ../arena.h:45:2: warning: #warning "Using <stdlib.h> malloc and free, because a replacement for one or both was not specified before including 'arena.h'." [-Wcpp]
-     45 | #warning \
-        |  ^~~~~~~
-
-$ ./example
-> Hello world!
-  Numbers 1-3: 
-  1
-  2
-  3
-
-$ valgrind ./example
-> ==27576== Memcheck, a memory error detector
-  ==27576== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-  ==27576== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-  ==27576== Command: ./example
-  ==27576== 
+$ valgrind ./test1
+> ==7448== Memcheck, a memory error detector
+  ==7448== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+  ==7448== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+  ==7448== Command: ./test1
+  ==7448== 
   Hello world!
   Numbers 1-3: 
   1
   2
   3
-  ==27576== 
-  ==27576== HEAP SUMMARY:
-  ==27576==     in use at exit: 0 bytes in 0 blocks
-  ==27576==   total heap usage: 3 allocs, 3 frees, 2,072 bytes allocated
-  ==27576== 
-  ==27576== All heap blocks were freed -- no leaks are possible
-  ==27576== 
-  ==27576== For lists of detected and suppressed errors, rerun with: -s
-  ==27576== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+  ==7448== 
+  ==7448== HEAP SUMMARY:
+  ==7448==     in use at exit: 0 bytes in 0 blocks
+  ==7448==   total heap usage: 3 allocs, 3 frees, 2,072 bytes allocated
+  ==7448== 
+  ==7448== All heap blocks were freed -- no leaks are possible
+  ==7448== 
+  ==7448== For lists of detected and suppressed errors, rerun with: -s
+  ==7448== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+```
+
+### Alignment Example
+There is also support for alignment.
+
+`code_aligned.c`
+```c
+#include <stdio.h>  // printf
+
+#define ARENA_IMPLEMENTATION
+#define ARENA_SUPPRESS_MALLOC_WARN
+#include "../arena.h"
+
+int main(void)
+{
+    Arena *arena = arena_create(1024); // Allocate a 1kB arena
+
+    char *char_ptr_1 = arena_alloc_aligned(arena, 10, 4);
+    printf("%ld\n", arena->index); // 10    
+
+    char *char_ptr_2 = arena_alloc_aligned(arena, 10, 4);
+    printf("%ld\n", arena->index); // 22    
+
+    char *char_ptr_3 = arena_alloc_aligned(arena, 10, 4);
+    printf("%ld\n", arena->index); // 34
+
+    arena_destroy(arena); // Free the allocated arena and everything in it
+
+    return 0;
+}
+```
+
+```
+$ gcc -o test2 code_aligned.c
+
+$ ./test2
+> 10
+  22
+  34
+
+$ valgrind ./test2
+> ==7457== Memcheck, a memory error detector
+  ==7457== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+  ==7457== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+  ==7457== Command: ./test2
+  ==7457== 
+  10
+  22
+  34
+  ==7457== 
+  ==7457== HEAP SUMMARY:
+  ==7457==     in use at exit: 0 bytes in 0 blocks
+  ==7457==   total heap usage: 3 allocs, 3 frees, 2,072 bytes allocated
+  ==7457== 
+  ==7457== All heap blocks were freed -- no leaks are possible
+  ==7457== 
+  ==7457== For lists of detected and suppressed errors, rerun with: -s
+  ==7457== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 
 ```
 
