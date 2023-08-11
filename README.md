@@ -171,4 +171,4 @@ $ valgrind ./test2
 ---
 
 ## Contributing
-Feel free to make suggestions by opening an issue. I will not accept any PRs.
+Feel free to make suggestions by opening an issue. I will likely not accept a PR.
