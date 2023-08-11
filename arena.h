@@ -1,5 +1,4 @@
 /*
-
 See README.md for more in-depth usage docs and an
 example.
 
