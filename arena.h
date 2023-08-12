@@ -37,6 +37,7 @@ typedef struct
 
 Arena* arena_create(size_t size);
 void* arena_alloc(Arena *arena, size_t size);
+void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment);
 void arena_clear(Arena* arena);
 void arena_destroy(Arena *arena);
 
