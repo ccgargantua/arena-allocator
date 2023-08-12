@@ -141,9 +141,9 @@ void arena_destroy(Arena *arena)
     
     if(arena->region != NULL)
     {
-        free(arena->region);            
+        ARENA_FREE(arena->region);            
     }
-    free(arena);
+    ARENA_FREE(arena);
 }
 
 #endif /* ARENA_IMPLEMENTATION */
