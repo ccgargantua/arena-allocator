@@ -138,7 +138,7 @@ int main(void)
     return 0;
 }
 ```
-
+**Build**
 ```
 $ gcc -o test2 code_aligned.c
 
