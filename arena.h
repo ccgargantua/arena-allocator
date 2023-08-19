@@ -101,7 +101,7 @@ void* arena_alloc(Arena *arena, size_t size)
 void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment)
 {
     size_t offset;
-    register void* alloc;
+    register void *alloc;
     
     if(arena == NULL)
     {
