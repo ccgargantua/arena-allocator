@@ -10,6 +10,9 @@ When you destroy the arena you also free it and all of its contents, reducing th
 
 You can learn more about arena/zone/region allocators [here](https://www.rfleury.com/p/untangling-lifetimes-the-arena-allocator).
 
+### Disclaimer
+This is not a full-blown allocator, at its core it is a wrapper for malloc and free (stdlib or your own).
+
 ---
 
 ## Usage
