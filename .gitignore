@@ -51,5 +51,6 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-# for the time being
-tests/
+# mine
+test
+test.exe
