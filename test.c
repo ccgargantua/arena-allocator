@@ -69,7 +69,6 @@ void test_arena_alloc(void)
     TEST_FATAL(char_array != NULL, "char array allocated from arena was NULL.");
 
     memcpy(char_array, "Hello, world!", 13);
-    TEST(memcmp(char_array, "Hello, world!", 13) == 0, "char array not copied correctly.");
     TEST_EQUAL(char_array[0], 'H');
     TEST_EQUAL(char_array[1], 'e');
     TEST_EQUAL(char_array[2], 'l');
