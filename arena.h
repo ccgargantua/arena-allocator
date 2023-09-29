@@ -130,6 +130,7 @@ void arena_clear(Arena* arena)
     {
         return;
     }
+    
     arena->index = 0;
 }
 
@@ -144,6 +145,7 @@ void arena_destroy(Arena *arena)
     {
         ARENA_FREE(arena->region);            
     }
+
     ARENA_FREE(arena);
 }
 
