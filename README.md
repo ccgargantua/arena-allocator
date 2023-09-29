@@ -174,4 +174,11 @@ $ valgrind ./test2
 ---
 
 ## Contributing
-Feel free to make suggestions by opening an issue. I will likely not accept a PR.
+
+This project has very simple guidelines for contributing.
+
+ * For any **contributions to the code of `arena.h`**, please open a pull request only if you are **addressing an issue**. This means you may only fulfill feature requests and fix bugs. Follow the code style and run the automated tests before opening a pull request. All tests must be passed.
+
+ * For **feature requests** or **bugs**, please **open an issue**.
+
+ * For any **contributions to testing** or **anything else**, open an issue and we will discuss it.
