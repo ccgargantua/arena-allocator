@@ -1,5 +1,3 @@
-
-CC := clang
 CFLAGS := -ansi -g
 
 test:
