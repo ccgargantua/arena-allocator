@@ -124,7 +124,7 @@ void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment)
     return arena_alloc(arena, size);
 }
 
-void arena_clear(Arena* arena)
+void arena_clear(Arena *arena)
 {
     if(arena == NULL)
     {
