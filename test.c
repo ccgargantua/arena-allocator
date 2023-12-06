@@ -91,6 +91,10 @@ void test_arena_alloc(void)
 
     TEST_EQUAL(arena->index, arena->size);
 
+    /* Failures */
+    
+    TEST_EQUAL(arena_alloc(NULL, 0), NULL);
+
     char *should_not_be_allocated = arena_alloc(arena, 1);
     TEST_EQUAL(should_not_be_allocated, NULL);
 
