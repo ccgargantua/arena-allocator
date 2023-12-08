@@ -28,11 +28,32 @@ QUICK USAGE:
 
 #include <stddef.h>
 
+#ifdef ARENA_DEBUG
+
+/* We are debugging this arena allocator, not your implementation of malloc/free */
+#include <stdlib.h>
+
+typedef struct Arena_Allocation_s
+{
+    size_t index;
+    size_t size;
+    char *pointer;
+    struct Arena_Allocation_s *next;
+} Arena_Allocation;
+
+#endif /* ARENA_DEBUG */
+
 typedef struct
 {
     char *region;
     size_t index;
     size_t size;
+
+    #ifdef ARENA_DEBUG
+    size_t allocations;
+    Arena_Allocation *head_allocation;
+    #endif /* ARENA_DEBUG */
+
 } Arena;
 
 Arena* arena_create(size_t size);
@@ -40,6 +61,11 @@ void* arena_alloc(Arena *arena, size_t size);
 void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment);
 void arena_clear(Arena* arena);
 void arena_destroy(Arena *arena);
+
+#ifdef ARENA_DEBUG
+Arena_Allocation* get_allocation_struct(Arena *arena, void *ptr);
+#endif
+
 
 #ifdef ARENA_IMPLEMENTATION
 
@@ -80,6 +106,13 @@ Arena* arena_create(size_t size)
         return NULL;
     }
 
+    #ifdef ARENA_DEBUG
+
+    arena->head_allocation = NULL;
+    arena->allocations = 0;
+
+    #endif /* ARENA_DEBUG */
+
     arena->index = 0;
     arena->size = size;
     return arena;
@@ -119,6 +152,35 @@ void* arena_alloc(Arena *arena, size_t size)
     {
         return NULL;    
     }
+
+    #ifdef ARENA_DEBUG
+
+    if(arena->head_allocation == NULL)
+    {
+        arena->head_allocation = malloc(sizeof(Arena_Allocation));
+        arena->head_allocation->index = arena->index;
+        arena->head_allocation->size = size;
+        arena->head_allocation->pointer = arena->region + arena->index;
+        arena->head_allocation->next = NULL;
+    }
+    else
+    {
+        Arena_Allocation *current = arena->head_allocation;
+        while(current->next != NULL)
+        {
+            current = current->next;
+        }
+
+        current->next = malloc(sizeof(Arena_Allocation));
+        current->next->index = arena->index;
+        current->next->size = size;
+        current->next->pointer = arena->region + arena->index;
+        current->next->next = NULL;
+    }
+
+    arena->allocations++;
+
+    #endif /* ARENA_DEBUG */
 
     arena->index += size;
     return arena->region + (arena->index - size);
@@ -189,6 +251,20 @@ void arena_clear(Arena *arena)
     {
         return;
     }
+
+    #ifdef ARENA_DEBUG
+
+    Arena_Allocation *current = arena->head_allocation;
+    while(current != NULL)
+    {
+        Arena_Allocation *next = current->next;
+        free(current);
+        current = next;
+    }
+    arena->allocations = 0;
+
+    #endif /* ARENA_DEBUG */
+
     
     arena->index = 0;
 }
@@ -207,6 +283,12 @@ void arena_destroy(Arena *arena)
         return;
     }
     
+    #ifdef ARENA_DEBUG
+
+    arena_clear(arena);
+
+    #endif /* ARENA_DEBUG */
+
     if(arena->region != NULL)
     {
         ARENA_FREE(arena->region);            
@@ -214,6 +296,39 @@ void arena_destroy(Arena *arena)
 
     ARENA_FREE(arena);
 }
+
+
+#ifdef ARENA_DEBUG
+
+/*
+Returns a pointer to the allocation sturct associated
+with a pointer to a segment in the specified arena's
+region.
+
+Parameters:
+  Arena *arena    |    The arena whose region should
+                       have a portion pointed to by
+                       ptr.
+  void *ptr       |    The ptr being searched for
+                       within the arena in order to
+                       find an allocation struct
+                       associated with it.
+*/
+Arena_Allocation* get_allocation_struct(Arena *arena, void *ptr)
+{
+    Arena_Allocation *current = arena->head_allocation;
+    while(current != NULL)
+    {
+        if(current->pointer == (char *)ptr)
+        {
+            return current;
+        }
+        current = current->next;
+    }
+    return NULL;
+}
+
+#endif /* ARENA_DEBUG */
 
 #endif /* ARENA_IMPLEMENTATION */
 

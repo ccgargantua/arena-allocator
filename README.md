@@ -32,6 +32,17 @@ For one file in one translation unit, you need to define some macros before incl
 #include "arena.h"
 ```
 
+You can also define the `ARENA_DEBUG` macro before including `arena.h`, which will generate linked-list code to track allocations and their sizes.
+
+```
+#define ARENA_DEBUG
+#define ARENA_IMPLEMENTATION
+#define ARENA_SUPPRESS_MALLOC_WARN
+#include "arena.h"
+```
+
+This generates a nodal `Arena_Allocation` struct with the members `size` (indicating the size of the allocation) and a pointer to the next `Arena_Allocation` in the linked list, `next`. It adds two additional members to the `Arena` struct, `allocations` which is an integer containing the number of allocations made, and `head_allocation`, which is the first `Arena_Allocation` pointer node in the linked list of allocations.
+
 After doing this in **one** file in **one** translation unit, for **any other file** you can include normally with a lone `#include "arena.h"`.
 
 ### Example

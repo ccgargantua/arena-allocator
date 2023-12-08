@@ -28,6 +28,7 @@ static int temp_total;
     fprintf(stderr, "Passed %d/%d tests in '%s'\n", passed_tests-temp_passed, total_tests-temp_total, name); \
 } while(0)
 
+#define ARENA_DEBUG
 #define ARENA_IMPLEMENTATION
 #define ARENA_SUPPRESS_MALLOC_WARN
 #include "arena.h"
@@ -36,6 +37,7 @@ void test_arena_create(void);
 void test_arena_alloc(void);
 void test_arena_alloc_aligned(void);
 void test_arena_clear(void);
+void test_get_allocation_struct(void);
 
 int main()
 {
@@ -43,6 +45,7 @@ int main()
     REPORT(test_arena_alloc, "Arena unaligned allocation suite");
     REPORT(test_arena_alloc_aligned, "Arena aligned allocation suite");
     REPORT(test_arena_clear, "Arena clearing suite");
+    REPORT(test_get_allocation_struct, "Arena debug method 'get_allocation_struct' suite");
 
     fprintf(stderr, "\nFinished.Passed %d/%d tests.\n", passed_tests, total_tests);
 
@@ -55,6 +58,8 @@ void test_arena_create(void)
     Arena *arena = arena_create(32);
     TEST_FATAL(arena != NULL, "Arena was NULL after creation. Fatal.");
     TEST_FATAL(arena->region != NULL, "Arena region was NULL");
+    TEST_EQUAL(arena->allocations, 0);
+    TEST_EQUAL(arena->head_allocation, NULL);
     TEST_EQUAL(arena->size, 32);
     TEST_EQUAL(arena->index, 0);
     arena_destroy(arena);
@@ -67,6 +72,11 @@ void test_arena_alloc(void)
 
     char *char_array = arena_alloc(arena, 13);
     TEST_FATAL(char_array != NULL, "char array allocated from arena was NULL.");
+    TEST_FATAL(arena->head_allocation != NULL, "Arena's head allocation linked list node was NULL.");
+
+    TEST_EQUAL(arena->head_allocation->size, 13);
+    TEST_EQUAL(arena->head_allocation->index, 0);
+    TEST_EQUAL(arena->allocations, 1);
 
     memcpy(char_array, "Hello, world!", 13);
     TEST_EQUAL(char_array[0], 'H');
@@ -82,6 +92,11 @@ void test_arena_alloc(void)
 
     long *long_array = arena_alloc(arena, sizeof(long) * 3);
     TEST_FATAL(long_array != NULL, "long array allocated from arena was NULL.");
+
+    TEST_FATAL(arena->head_allocation->next != NULL, "Link list addition failed.");
+    TEST_EQUAL(arena->head_allocation->next->size, sizeof(long) * 3);
+    TEST_EQUAL(arena->head_allocation->next->index, 13);
+    TEST_EQUAL(arena->allocations, 2);
 
     long expected[3] = {999, 9999, 99999};
     memcpy(long_array, expected, sizeof(long) * 3);
@@ -109,6 +124,8 @@ void test_arena_alloc_aligned(void)
     arena_alloc_aligned(arena, 8, 4);
     TEST_EQUAL(arena->index, 8);
 
+    TEST_FATAL(arena->head_allocation != NULL, "Arena linked list head node is NULL.");
+
     arena_alloc_aligned(arena, 3, 4);
     TEST_EQUAL(arena->index, 11);
     
@@ -121,6 +138,8 @@ void test_arena_alloc_aligned(void)
     arena_alloc_aligned(arena, 1, 4);
     TEST_EQUAL(arena->index, 29);
 
+    TEST_EQUAL(arena->allocations, 5);
+
     arena_destroy(arena);
 }
 
@@ -131,5 +150,22 @@ void test_arena_clear(void)
     arena->index = 5;
     arena_clear(arena);
     TEST_EQUAL(arena->index, 0);
+    arena_destroy(arena);
+}
+
+
+void test_get_allocation_struct(void)
+{
+    Arena *arena = arena_create(64);
+    TEST_FATAL(arena != NULL, "Arena was NULL after creation.");
+
+    char *ptr = arena_alloc(arena, 8);
+    TEST_FATAL(ptr != NULL, "Pointer was NULL after creation.");
+
+    Arena_Allocation *allocation_struct = get_allocation_struct(arena, ptr);
+    TEST_FATAL(allocation_struct != NULL, "Allocation struct could not be found through pointer comparison.");
+    TEST_EQUAL(allocation_struct->index, 0);
+    TEST_EQUAL(allocation_struct->size, 8);
+
     arena_destroy(arena);
 }
