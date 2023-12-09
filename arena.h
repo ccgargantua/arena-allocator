@@ -293,9 +293,7 @@ void arena_destroy(Arena *arena)
     }
     
     #ifdef ARENA_DEBUG
-
     arena_clear(arena);
-
     #endif /* ARENA_DEBUG */
 
     if(arena->region != NULL)
@@ -334,7 +332,7 @@ Arena_Allocation* get_allocation_struct(Arena *arena, void *ptr)
         }
         current = current->next;
     }
-    
+
     return NULL;
 }
 
