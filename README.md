@@ -81,20 +81,20 @@ int main(void)
 ```
 **Build and run**
 ```
-$ gcc -o test1 example.c
+$ gcc -o example example.c
 
-$ ./test1
+$ ./example
 > Hello world!
   Numbers 1-3: 
   1
   2
   3
 
-$ valgrind ./test1
+$ valgrind ./example
 > ==7448== Memcheck, a memory error detector
   ==7448== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
   ==7448== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-  ==7448== Command: ./test1
+  ==7448== Command: ./example
   ==7448== 
   Hello world!
   Numbers 1-3: 
@@ -143,18 +143,18 @@ int main(void)
 ```
 **Build and run**
 ```
-$ gcc -o test2 example_aligned.c
+$ gcc -o example_aligned example_aligned.c
 
-$ ./test2
+$ ./example_aligned
 > 10
   22
   34
 
-$ valgrind ./test2
+$ valgrind ./example_aligned
 > ==7457== Memcheck, a memory error detector
   ==7457== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
   ==7457== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-  ==7457== Command: ./test2
+  ==7457== Command: ./example_aligned
   ==7457== 
   10
   22
@@ -219,9 +219,9 @@ int main(void)
 ```
 **Build and run**
 ```
-$ gcc -o test3 example/example_debug.c
+$ gcc -o example_debug example_debug.c
 
-$ ./test3 
+$ ./example_debug 
 > X index in region: 0
   X size in region: 5
   Y index in region: 5
