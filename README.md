@@ -32,19 +32,6 @@ For one file in one translation unit, you need to define some macros before incl
 #include "arena.h"
 ```
 
-You can also define the `ARENA_DEBUG` macro before including `arena.h`, which will generate linked-list code to track allocations and their sizes.
-
-```
-#define ARENA_DEBUG
-#define ARENA_IMPLEMENTATION
-#define ARENA_SUPPRESS_MALLOC_WARN
-#include "arena.h"
-```
-
-This generates a nodal `Arena_Allocation` struct with the members `size` (indicating the size of the allocation) and a pointer to the next `Arena_Allocation` in the linked list, `next`. It adds two additional members to the `Arena` struct, `allocations` which is an integer containing the number of allocations made, and `head_allocation`, which is the first `Arena_Allocation` pointer node in the linked list of allocations.
-
-This debug information can be accessed by using the `arena_get_allocation_struct` method which, when supplied with an arena and a pointer to memory allocated from that arena, will return a pointer to the `Arena_Allocation` struct that is associated with that pointer (or NULL on failure).
-
 After doing this in **one** file in **one** translation unit, for **any other file** you can include normally with a lone `#include "arena.h"`.
 
 ### Example
@@ -92,7 +79,7 @@ int main(void)
     return 0;
 }
 ```
-**Build**
+**Build and run**
 ```
 $ gcc -o test1 example.c
 
@@ -125,7 +112,7 @@ $ valgrind ./test1
   ==7448== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 ```
 
-### Alignment Example
+### Alignment
 There is also support for alignment.
 
 `example_aligned.c`
@@ -154,7 +141,7 @@ int main(void)
     return 0;
 }
 ```
-**Build**
+**Build and run**
 ```
 $ gcc -o test2 example_aligned.c
 
@@ -182,6 +169,63 @@ $ valgrind ./test2
   ==7457== For lists of detected and suppressed errors, rerun with: -s
   ==7457== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 
+```
+
+### Debug
+
+You can also define the `ARENA_DEBUG` macro before including `arena.h`, which will generate linked-list code to track allocations and their sizes.
+
+```c
+#define ARENA_DEBUG
+#define ARENA_IMPLEMENTATION
+#define ARENA_SUPPRESS_MALLOC_WARN
+#include "arena.h"
+```
+
+This generates a nodal `Arena_Allocation` struct with the members `size` (indicating the size of the allocation) and a pointer to the next `Arena_Allocation` in the linked list, `next`. It adds two additional members to the `Arena` struct, `allocations` which is an integer containing the number of allocations made, and `head_allocation`, which is the first `Arena_Allocation` pointer node in the linked list of allocations.
+
+This debug information can be accessed by using the `arena_get_allocation_struct` method which, when supplied with an arena and a pointer to memory allocated from that arena, will return a pointer to the `Arena_Allocation` struct that is associated with that pointer (or NULL on failure).
+
+```c
+#include <stdio.h>  // printf
+#include <string.h> // memcpy
+
+#define ARENA_DEBUG
+#define ARENA_IMPLEMENTATION
+#define ARENA_SUPPRESS_MALLOC_WARN
+#include "../arena.h"
+
+int main(void)
+{
+
+    Arena *arena = arena_create(1024);
+
+    char *x = arena_alloc(arena, 5);
+    char *y = arena_alloc(arena, 25);
+
+    Arena_Allocation *x_allocation = arena_get_allocation_struct(arena, x);
+    Arena_Allocation *y_allocation = arena_get_allocation_struct(arena, y);
+
+    printf("X index in region: %ld\n", x_allocation->index);
+    printf("X size in region: %ld\n", x_allocation->size);
+
+    printf("Y index in region: %ld\n", y_allocation->index);
+    printf("Y size in region: %ld\n", y_allocation->size);
+
+    arena_destroy(arena);
+
+    return 0;
+}
+```
+**Build and run**
+```
+$ gcc -o test3 example/example_debug.c
+
+$ ./test3 
+> X index in region: 0
+  X size in region: 5
+  Y index in region: 5
+  Y size in region: 25 
 ```
 
 ---
