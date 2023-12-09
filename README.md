@@ -234,7 +234,7 @@ $ ./example_debug
 
 This project has very simple guidelines for contributing.
 
- * For any **contributions to the code of `arena.h`**, please open a pull request only if you are **addressing an issue** to fulfill a **feature request or fix a bug**. Follow the code style below and run the automated tests before opening a pull request. All tests must be passed.
+ * For any **contributions to the code of `arena.h`**, please open a pull request only if you are **addressing an issue** to fulfill a **feature request or fix a bug**. Follow the code style and run the automated tests before opening a pull request. All tests must be passed.
 
  * For **feature requests** or **bugs**, please **open an issue**.
 
