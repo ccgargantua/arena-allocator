@@ -23,6 +23,7 @@ QUICK USAGE:
   like you normally would by itself.
 */
 
+
 #ifndef ARENA_H
 #define ARENA_H
 
@@ -114,10 +115,8 @@ Arena* arena_create(size_t size)
     }
 
     #ifdef ARENA_DEBUG
-
     arena->head_allocation = NULL;
     arena->allocations = 0;
-
     #endif /* ARENA_DEBUG */
 
     arena->index = 0;
