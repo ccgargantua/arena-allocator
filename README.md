@@ -48,7 +48,7 @@ This debug information can be accessed by using the `get_allocation_struct` meth
 After doing this in **one** file in **one** translation unit, for **any other file** you can include normally with a lone `#include "arena.h"`.
 
 ### Example
-`code.c`
+`example.c`
 ```c
 #include <stdio.h>  // printf
 #include <string.h> // memcpy
@@ -94,7 +94,7 @@ int main(void)
 ```
 **Build**
 ```
-$ gcc -o test1 code.c
+$ gcc -o test1 example.c
 
 $ ./test1
 > Hello world!
@@ -128,7 +128,7 @@ $ valgrind ./test1
 ### Alignment Example
 There is also support for alignment.
 
-`code_aligned.c`
+`example_aligned.c`
 ```c
 #include <stdio.h>  // printf
 
@@ -156,7 +156,7 @@ int main(void)
 ```
 **Build**
 ```
-$ gcc -o test2 code_aligned.c
+$ gcc -o test2 example_aligned.c
 
 $ ./test2
 > 10
