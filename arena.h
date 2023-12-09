@@ -68,7 +68,7 @@ void arena_destroy(Arena *arena);
 
 
 #ifdef ARENA_DEBUG
-Arena_Allocation* get_allocation_struct(Arena *arena, void *ptr);
+Arena_Allocation* arena_get_allocation_struct(Arena *arena, void *ptr);
 #endif
 
 
@@ -321,7 +321,7 @@ Parameters:
                        find an allocation struct
                        associated with it.
 */
-Arena_Allocation* get_allocation_struct(Arena *arena, void *ptr)
+Arena_Allocation* arena_get_allocation_struct(Arena *arena, void *ptr)
 {
     Arena_Allocation *current = arena->head_allocation;
     while(current != NULL)

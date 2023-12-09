@@ -37,7 +37,7 @@ void test_arena_create(void);
 void test_arena_alloc(void);
 void test_arena_alloc_aligned(void);
 void test_arena_clear(void);
-void test_get_allocation_struct(void);
+void test_arena_get_allocation_struct(void);
 
 int main()
 {
@@ -45,7 +45,7 @@ int main()
     REPORT(test_arena_alloc, "Arena unaligned allocation suite");
     REPORT(test_arena_alloc_aligned, "Arena aligned allocation suite");
     REPORT(test_arena_clear, "Arena clearing suite");
-    REPORT(test_get_allocation_struct, "Arena debug method 'get_allocation_struct' suite");
+    REPORT(test_arena_get_allocation_struct, "Arena debug method 'arena_get_allocation_struct' suite");
 
     fprintf(stderr, "\nFinished.Passed %d/%d tests.\n", passed_tests, total_tests);
 
@@ -154,7 +154,7 @@ void test_arena_clear(void)
 }
 
 
-void test_get_allocation_struct(void)
+void test_arena_get_allocation_struct(void)
 {
     Arena *arena = arena_create(64);
     TEST_FATAL(arena != NULL, "Arena was NULL after creation.");
@@ -162,7 +162,7 @@ void test_get_allocation_struct(void)
     char *ptr = arena_alloc(arena, 8);
     TEST_FATAL(ptr != NULL, "Pointer was NULL after creation.");
 
-    Arena_Allocation *allocation_struct = get_allocation_struct(arena, ptr);
+    Arena_Allocation *allocation_struct = arena_get_allocation_struct(arena, ptr);
     TEST_FATAL(allocation_struct != NULL, "Allocation struct could not be found through pointer comparison.");
     TEST_EQUAL(allocation_struct->index, 0);
     TEST_EQUAL(allocation_struct->size, 8);
