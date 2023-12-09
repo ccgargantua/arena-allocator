@@ -26,7 +26,9 @@ QUICK USAGE:
 #ifndef ARENA_H
 #define ARENA_H
 
+
 #include <stddef.h>
+
 
 #ifdef ARENA_DEBUG
 
@@ -43,6 +45,7 @@ typedef struct Arena_Allocation_s
 
 #endif /* ARENA_DEBUG */
 
+
 typedef struct
 {
     char *region;
@@ -56,11 +59,13 @@ typedef struct
 
 } Arena;
 
+
 Arena* arena_create(size_t size);
 void* arena_alloc(Arena *arena, size_t size);
 void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment);
 void arena_clear(Arena* arena);
 void arena_destroy(Arena *arena);
+
 
 #ifdef ARENA_DEBUG
 Arena_Allocation* get_allocation_struct(Arena *arena, void *ptr);
@@ -68,6 +73,7 @@ Arena_Allocation* get_allocation_struct(Arena *arena, void *ptr);
 
 
 #ifdef ARENA_IMPLEMENTATION
+
 
 #if !defined(ARENA_MALLOC) || !defined(ARENA_FREE)
 
@@ -80,6 +86,7 @@ Arena_Allocation* get_allocation_struct(Arena *arena, void *ptr);
     #define ARENA_FREE free
 
 #endif /* !defined ARENA_MALLOC, ARENA_FREE */
+
 
 /*
 Allocate and return a pointer to memory to the arena
@@ -117,6 +124,7 @@ Arena* arena_create(size_t size)
     arena->size = size;
     return arena;
 }
+
 
 /*
 Return a pointer to a portion of specified size of the
@@ -186,6 +194,7 @@ void* arena_alloc(Arena *arena, size_t size)
     return arena->region + (arena->index - size);
 }
 
+
 /*
 Same as arena_alloc, except you can specify a
 memory alignment for allocations.
@@ -237,6 +246,7 @@ void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment)
     return arena_alloc(arena, size);
 }
 
+
 /*
 Reset the pointer to the arena region to the beginning
 of the allocation. Allows reuse of the memory without
@@ -265,7 +275,6 @@ void arena_clear(Arena *arena)
 
     #endif /* ARENA_DEBUG */
 
-    
     arena->index = 0;
 }
 
@@ -325,11 +334,14 @@ Arena_Allocation* get_allocation_struct(Arena *arena, void *ptr)
         }
         current = current->next;
     }
+    
     return NULL;
 }
 
 #endif /* ARENA_DEBUG */
 
+
 #endif /* ARENA_IMPLEMENTATION */
+
 
 #endif /* ARENA_H */
