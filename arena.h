@@ -61,13 +61,100 @@ typedef struct
 } Arena;
 
 
+/*
+Allocate and return a pointer to memory to the arena
+with a region with the specified size.
+
+Parameters:
+  size_t size    |    The size (in bytes) of the arena
+                      memory region.
+Return:
+  Pointer to arena on success, NULL on failure
+*/
 Arena* arena_create(size_t size);
+
+
+/*
+Return a pointer to a portion of specified size of the
+specified arena's region. Nothing will restrict you
+from allocating more memory than you specified, so be
+mindful of your memory (as you should anyways) or you
+will get some hard-to-track bugs.
+
+Parameters:
+  Arena *arena    |    The arena of which the pointer
+                       from the region will be
+                       distributed
+  size_t size     |    The size (in bytes) of
+                       allocated memory planned to be
+                       used.
+Return:
+  Pointer to arena region segment on success, NULL on
+  failure.
+*/
 void* arena_alloc(Arena *arena, size_t size);
+
+
+/*
+Same as arena_alloc, except you can specify a
+memory alignment for allocations.
+
+Return a pointer to a portion of specified size of the
+specified arena's region. Nothing will restrict you
+from allocating more memory than you specified, so be
+mindful of your memory (as you should anyways) or you
+will get some hard-to-track bugs.
+
+Parameters:
+  Arena *arena              |    The arena of which the pointer
+                                 from the region will be
+                                 distributed
+  size_t size               |    The size (in bytes) of
+                                 allocated memory planned to be
+                                 used.
+  unsigned int alignment    |    Alignment (in bytes) for each
+                                 memory allocation.
+Return:
+  Pointer to arena region segment on success, NULL on
+  failure.
+*/
 void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment);
+
+
+/*
+Reset the pointer to the arena region to the beginning
+of the allocation. Allows reuse of the memory without
+realloc or frees.
+
+Parameters:
+  Arena *arena    |    The arena to be cleared.
+*/
 void arena_clear(Arena* arena);
+
+
+/*
+Free the memory allocated for the entire arena region.
+
+Parameters:
+  Arena *arena    |    The arena to be destroyed.
+*/
 void arena_destroy(Arena *arena);
 
 
+/*
+Returns a pointer to the allocation struct associated
+with a pointer to a segment in the specified arena's
+region.
+
+Parameters:
+  Arena *arena    |    The arena whose region should
+                       have a portion pointed to by
+                       ptr.
+  void *ptr       |    The ptr being searched for
+                       within the arena in order to
+                       find an allocation struct
+                       associated with it.
+*/
 #ifdef ARENA_DEBUG
 Arena_Allocation* arena_get_allocation_struct(Arena *arena, void *ptr);
 #endif
@@ -89,16 +176,6 @@ Arena_Allocation* arena_get_allocation_struct(Arena *arena, void *ptr);
 #endif /* !defined ARENA_MALLOC, ARENA_FREE */
 
 
-/*
-Allocate and return a pointer to memory to the arena
-with a region with the specified size.
-
-Parameters:
-  size_t size    |    The size (in bytes) of the arena
-                      memory region.
-Return:
-  Pointer to arena on success, NULL on failure
-*/
 Arena* arena_create(size_t size)
 {
     Arena *arena = ARENA_MALLOC(sizeof(Arena));
@@ -125,24 +202,6 @@ Arena* arena_create(size_t size)
 }
 
 
-/*
-Return a pointer to a portion of specified size of the
-specified arena's region. Nothing will restrict you
-from allocating more memory than you specified, so be
-mindful of your memory (as you should anyways) or you
-will get some hard-to-track bugs.
-
-Parameters:
-  Arena *arena    |    The arena of which the pointer
-                       from the region will be
-                       distributed
-  size_t size     |    The size (in bytes) of
-                       allocated memory planned to be
-                       used.
-Return:
-  Pointer to arena region segment on success, NULL on
-  failure.
-*/
 void* arena_alloc(Arena *arena, size_t size)
 {
     if(arena == NULL)
@@ -194,29 +253,6 @@ void* arena_alloc(Arena *arena, size_t size)
 }
 
 
-/*
-Same as arena_alloc, except you can specify a
-memory alignment for allocations.
-
-Return a pointer to a portion of specified size of the
-specified arena's region. Nothing will restrict you
-from allocating more memory than you specified, so be
-mindful of your memory (as you should anyways) or you
-will get some hard-to-track bugs.
-
-Parameters:
-  Arena *arena              |    The arena of which the pointer
-                                 from the region will be
-                                 distributed
-  size_t size               |    The size (in bytes) of
-                                 allocated memory planned to be
-                                 used.
-  unsigned int alignment    |    Alignment (in bytes) for each
-                                 memory allocation.
-Return:
-  Pointer to arena region segment on success, NULL on
-  failure.
-*/
 void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment)
 {
     unsigned int offset;
@@ -246,14 +282,6 @@ void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment)
 }
 
 
-/*
-Reset the pointer to the arena region to the beginning
-of the allocation. Allows reuse of the memory without
-realloc or frees.
-
-Parameters:
-  Arena *arena    |    The arena to be cleared.
-*/
 void arena_clear(Arena *arena)
 {
     if(arena == NULL)
@@ -279,12 +307,6 @@ void arena_clear(Arena *arena)
 }
 
 
-/*
-Free the memory allocated for the entire arena region.
-
-Parameters:
-  Arena *arena    |    The arena to be destroyed.
-*/
 void arena_destroy(Arena *arena)
 {
     if(arena == NULL)
@@ -307,20 +329,6 @@ void arena_destroy(Arena *arena)
 
 #ifdef ARENA_DEBUG
 
-/*
-Returns a pointer to the allocation struct associated
-with a pointer to a segment in the specified arena's
-region.
-
-Parameters:
-  Arena *arena    |    The arena whose region should
-                       have a portion pointed to by
-                       ptr.
-  void *ptr       |    The ptr being searched for
-                       within the arena in order to
-                       find an allocation struct
-                       associated with it.
-*/
 Arena_Allocation* arena_get_allocation_struct(Arena *arena, void *ptr)
 {
     Arena_Allocation *current = arena->head_allocation;
