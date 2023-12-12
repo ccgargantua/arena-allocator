@@ -271,6 +271,7 @@ void arena_clear(Arena *arena)
         current = next;
     }
     arena->allocations = 0;
+    arena->head_allocation = NULL;
 
     #endif /* ARENA_DEBUG */
 
