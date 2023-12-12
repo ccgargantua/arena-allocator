@@ -307,7 +307,7 @@ void arena_destroy(Arena *arena)
 #ifdef ARENA_DEBUG
 
 /*
-Returns a pointer to the allocation sturct associated
+Returns a pointer to the allocation struct associated
 with a pointer to a segment in the specified arena's
 region.
 
