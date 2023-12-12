@@ -106,7 +106,7 @@ Arena* arena_create(size_t size)
     {
         return NULL;
     }
-    
+
     arena->region = ARENA_MALLOC(size);
     if(arena->region == NULL)
     {
@@ -157,7 +157,7 @@ void* arena_alloc(Arena *arena, size_t size)
 
     if(arena->size - arena->index < size)
     {
-        return NULL;    
+        return NULL;
     }
 
     #ifdef ARENA_DEBUG
@@ -220,7 +220,7 @@ Return:
 void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment)
 {
     unsigned int offset;
-    
+
     if(arena == NULL)
     {
         return NULL;
@@ -271,6 +271,7 @@ void arena_clear(Arena *arena)
         current = next;
     }
     arena->allocations = 0;
+    arena->head_allocation = NULL;
 
     #endif /* ARENA_DEBUG */
 
@@ -290,14 +291,14 @@ void arena_destroy(Arena *arena)
     {
         return;
     }
-    
+
     #ifdef ARENA_DEBUG
     arena_clear(arena);
     #endif /* ARENA_DEBUG */
 
     if(arena->region != NULL)
     {
-        ARENA_FREE(arena->region);            
+        ARENA_FREE(arena->region);
     }
 
     ARENA_FREE(arena);
@@ -307,7 +308,7 @@ void arena_destroy(Arena *arena)
 #ifdef ARENA_DEBUG
 
 /*
-Returns a pointer to the allocation sturct associated
+Returns a pointer to the allocation struct associated
 with a pointer to a segment in the specified arena's
 region.
 
