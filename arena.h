@@ -106,7 +106,7 @@ Arena* arena_create(size_t size)
     {
         return NULL;
     }
-    
+
     arena->region = ARENA_MALLOC(size);
     if(arena->region == NULL)
     {
@@ -157,7 +157,7 @@ void* arena_alloc(Arena *arena, size_t size)
 
     if(arena->size - arena->index < size)
     {
-        return NULL;    
+        return NULL;
     }
 
     #ifdef ARENA_DEBUG
@@ -220,7 +220,7 @@ Return:
 void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment)
 {
     unsigned int offset;
-    
+
     if(arena == NULL)
     {
         return NULL;
@@ -290,14 +290,14 @@ void arena_destroy(Arena *arena)
     {
         return;
     }
-    
+
     #ifdef ARENA_DEBUG
     arena_clear(arena);
     #endif /* ARENA_DEBUG */
 
     if(arena->region != NULL)
     {
-        ARENA_FREE(arena->region);            
+        ARENA_FREE(arena->region);
     }
 
     ARENA_FREE(arena);
