@@ -5,13 +5,13 @@
 static int passed_tests = 0;
 static int total_tests = 0;
 
-#define TEST(exp, desc) do {                         \
-    ++total_tests;                                   \
-    if( (exp) ) {                                    \
-        ++passed_tests;                              \
-    }                                                \
-    else                                             \
-        fprintf(stderr, "Failed test '%s'\n", desc); \
+#define TEST(exp, desc) do {                                                        \
+    ++total_tests;                                                                  \
+    if( (exp) ) {                                                                   \
+        ++passed_tests;                                                             \
+    }                                                                               \
+    else                                                                            \
+        fprintf(stderr, "  Failed test '%s' at %s:%d\n", desc, __FILE__, __LINE__); \
 } while(0)
 
 #define TEST_EQUAL(a, b) do{TEST(a == b, #a " != " #b);}while(0)
