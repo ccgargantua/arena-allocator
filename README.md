@@ -1,5 +1,5 @@
 # Arena Allocator
-Single-header arena allocator written in ANSI C.
+Single-header arena allocator written in C89
 
 ---
 
