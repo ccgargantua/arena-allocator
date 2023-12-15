@@ -291,12 +291,11 @@ void arena_clear(Arena *arena)
 
     #ifdef ARENA_DEBUG
 
-    Arena_Allocation *current = arena->head_allocation;
-    while(current != NULL)
+    while(arena->head_allocation != NULL)
     {
-        Arena_Allocation *next = current->next;
-        free(current);
-        current = next;
+        Arena_Allocation *next = arena->head_allocation->next;
+        free(arena->head_allocation);
+        arena->head_allocation = next;
     }
     arena->allocations = 0;
     arena->head_allocation = NULL;
