@@ -81,7 +81,7 @@ int main(void)
 ```
 **Build and run**
 ```
-$ gcc -o example example.c
+$ gcc -o example code_examples/example.c
 
 $ ./example
 > Hello world!
@@ -143,7 +143,7 @@ int main(void)
 ```
 **Build and run**
 ```
-$ gcc -o example_aligned example_aligned.c
+$ gcc -o example_aligned code_examples/example_aligned.c
 
 $ ./example_aligned
 > 10
@@ -190,7 +190,6 @@ This debug information can be accessed by using the `arena_get_allocation_struct
 #include <stdio.h>  // printf
 #include <string.h> // memcpy
 
-#define ARENA_DEBUG
 #define ARENA_IMPLEMENTATION
 #define ARENA_SUPPRESS_MALLOC_WARN
 #include "../arena.h"
@@ -219,7 +218,7 @@ int main(void)
 ```
 **Build and run**
 ```
-$ gcc -o example_debug example_debug.c
+$ gcc -o -g example_debug code_examples/example_debug.c
 
 $ ./example_debug 
 > X index in region: 0
