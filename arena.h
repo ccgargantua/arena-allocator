@@ -54,7 +54,7 @@ typedef struct
     size_t size;
 
     #ifdef ARENA_DEBUG
-    size_t allocations;
+    unsigned long allocations;
     Arena_Allocation *head_allocation;
     #endif /* ARENA_DEBUG */
 
