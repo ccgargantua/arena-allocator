@@ -57,7 +57,6 @@ typedef struct
     unsigned long allocations;
     Arena_Allocation *head_allocation;
     #endif /* ARENA_DEBUG */
-
 } Arena;
 
 
