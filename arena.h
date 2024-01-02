@@ -31,9 +31,9 @@ QUICK USAGE:
 #include <stddef.h>
 
 #if __STDC_VERSION__ >= 199901L
-    #define inline inline
+    #define ARENA_INLINE inline
 #else
-    #define inline
+    #define ARENA_INLINE
 #endif
 
 #ifdef ARENA_DEBUG
