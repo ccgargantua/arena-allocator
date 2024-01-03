@@ -237,4 +237,33 @@ This project has very simple guidelines for contributing.
 
  * For **feature requests** or **bugs**, please **open an issue**.
 
- * For any **anything else** (such as adding tests or similar), open an issue and we will discuss it.
+ * For any **anything else**, open an issue and we will discuss it.
+
+### Modifications to `arena.h`
+
+At the moment there is no documentation for the code style, but it should be relatively simple enough to pick up on through reading existing code for most things. If you are having trouble, feel free to open an issue for a FR. If it already exists, comment on it describing what you are confused by.
+
+* If you modify `arena.h` whatsoever, you must run the tests. See the next section.
+
+* If you add a feature within `arena.h`, you must create an adequate test or tests.
+
+* If you add a feature within `arena.h`, you must create an adequate example in `code_examples/` **and** add it to the `makefile`.
+
+### Testing
+
+To test the code, build and run the tests with:
+
+```
+$ make tests
+$ ./test
+```
+
+If you change `arena.h` whatsoever, **run the tests before opening a PR**. If you open a PR with modifictions to the code and the tests don't all pass, make a comment on your PR stating which test you believe is wrong and is preventing you from passing all of the tests. If any test fails and your PR doesn't have a comment that claims to correct a failed test, your PR will be ignored.
+
+Outside of addressing bugs and feature requests, fulfilling a feature request or bug fix for functionality within `arena.h` permits modifying or adding relevant testing code within `test.c`, and you must do so if you want your PR to be acknowledged. There is documentation for testing code within `test.c` at the top of the file in the form of comments.
+
+The tests must also pass through valgrind leak-free.
+
+```
+$ valgrind ./test
+```
