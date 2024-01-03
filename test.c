@@ -41,15 +41,17 @@ TEST(exp, desc)       | TEST is used whenever TEST_EQUAL doesn't fit.
                           If `exp` evaluates at true, the test passes.
                           Otherwise, the test fails and the `desc` is
                           printed.
-
 */
+
 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
+
 static int passed_tests = 0;
 static int total_tests = 0;
+
 
 #define TEST(exp, desc) do {                                                        \
     ++total_tests;                                                                  \
@@ -60,12 +62,16 @@ static int total_tests = 0;
         fprintf(stderr, "  Failed test '%s' at %s:%d\n", desc, __FILE__, __LINE__); \
 } while(0)
 
+
 #define TEST_EQUAL(a, b) do{TEST(a == b, #a " != " #b);}while(0)
+
 
 #define TEST_FATAL(exp, desc) TEST(exp, "FATAL: " desc); do{if(!(exp))abort();}while(0)
 
+
 static int temp_passed;
 static int temp_total;
+
 
 #define REPORT(suite, name) do {                                                                             \
     temp_passed = passed_tests;                                                                              \
@@ -74,16 +80,19 @@ static int temp_total;
     fprintf(stderr, "Passed %d/%d tests in '%s'\n", passed_tests-temp_passed, total_tests-temp_total, name); \
 } while(0)
 
+
 #define ARENA_DEBUG
 #define ARENA_IMPLEMENTATION
 #define ARENA_SUPPRESS_MALLOC_WARN
 #include "arena.h"
+
 
 void test_arena_create(void);
 void test_arena_alloc(void);
 void test_arena_alloc_aligned(void);
 void test_arena_clear(void);
 void test_arena_get_allocation_struct(void);
+
 
 int main()
 {
