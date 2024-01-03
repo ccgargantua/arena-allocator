@@ -125,11 +125,16 @@ void test_arena_alloc(void)
     TEST_EQUAL(char_array[0], 'H');
     TEST_EQUAL(char_array[1], 'e');
     TEST_EQUAL(char_array[2], 'l');
+    TEST_EQUAL(char_array[3], 'l');
     TEST_EQUAL(char_array[4], 'o');
+    TEST_EQUAL(char_array[5], ',');
+    TEST_EQUAL(char_array[6], ' ');
     TEST_EQUAL(char_array[7], 'w');
+    TEST_EQUAL(char_array[8], 'o');
     TEST_EQUAL(char_array[9], 'r');
     TEST_EQUAL(char_array[10], 'l');
     TEST_EQUAL(char_array[11], 'd');
+    TEST_EQUAL(char_array[12], '!');
 
     TEST_EQUAL(arena->index, 13);
 
