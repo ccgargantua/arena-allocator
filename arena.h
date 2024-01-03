@@ -31,6 +31,13 @@ QUICK USAGE:
 #include <stddef.h>
 
 
+#if __STDC_VERSION__ >= 199901L
+    #define ARENA_INLINE inline
+#else
+    #define ARENA_INLINE
+#endif
+
+
 #ifdef ARENA_DEBUG
 
 /* We are debugging this arena allocator, not your implementation of malloc/free */
