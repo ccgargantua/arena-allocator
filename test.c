@@ -8,6 +8,9 @@ it for both forward declarations, implementations, and `REPORT`s.
 After implementing a testing suite, you should use the `REPORT` in
 `main()`.
 
+Tests should comply with C89 in order to ensure backwards compaitbility is
+still achievable.
+
 Within the testing suite, the following macros should be used:
 
 TEST_FATAL(exp, desc) | TEST_FATAL should be used whenever a failure
