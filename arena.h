@@ -38,7 +38,7 @@ QUICK USAGE:
     #define ARENA_INLINE inline
 #else
     #define ARENA_INLINE
-#endif
+#endif /* __STDC_VERSION__ >= 199901L */
 
 
 #ifdef ARENA_DEBUG
@@ -166,7 +166,7 @@ Parameters:
 */
 #ifdef ARENA_DEBUG
 Arena_Allocation* arena_get_allocation_struct(Arena *arena, void *ptr);
-#endif
+#endif /* ARENA_DEBUG */
 
 
 #ifdef ARENA_IMPLEMENTATION
