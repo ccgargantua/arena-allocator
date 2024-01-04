@@ -15,6 +15,9 @@ QUICK USAGE:
 #define ARENA_FREE <stdlib_free_like_deallocator>
 // ... or just this
 #define ARENA_SUPPRESS_MALLOC_WARN // alternatively using compiler flag -D with same name
+
+// for debug functionality, you can also do:
+#define ARENA_DEBUG
 ```
 
   After doing that, you can `#include "arena.h"`
