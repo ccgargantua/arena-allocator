@@ -11,7 +11,7 @@ examples: $(EXAMPLES_OUT)
 	@$(CC) -o $@ $<
 
 test: tests
-	./test
+	valgrind ./test
 	@$(MAKE) --no-print-directory clean
 
 clean:
