@@ -102,7 +102,7 @@ int main()
     REPORT(test_arena_clear, "Arena clearing suite");
     REPORT(test_arena_get_allocation_struct, "Arena debug method 'arena_get_allocation_struct' suite");
 
-    fprintf(stderr, "\nFinished.Passed %d/%d tests.\n", passed_tests, total_tests);
+    fprintf(stderr, "\nFinished. Passed %d/%d tests.\n", passed_tests, total_tests);
 
     return 0;
 }
