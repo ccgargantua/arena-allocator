@@ -267,3 +267,9 @@ The tests must also pass through valgrind leak-free.
 ```
 $ valgrind ./test
 ```
+
+You can build the tests and run them under valgrind in one command with:
+
+```
+$ make test
+```
