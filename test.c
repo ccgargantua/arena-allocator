@@ -94,7 +94,7 @@ void test_arena_clear(void);
 void test_arena_get_allocation_struct(void);
 
 
-int main()
+int main(void)
 {
     REPORT(test_arena_create, "Arena creation suite");
     REPORT(test_arena_alloc, "Arena unaligned allocation suite");
