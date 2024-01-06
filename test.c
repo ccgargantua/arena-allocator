@@ -125,9 +125,9 @@ void test_arena_alloc(void)
 {
     Arena *arena = arena_create(13 + sizeof(long) * 3);
     char *char_array = arena_alloc(arena, 13);
-    long *long_array = arena_alloc(arena, sizeof(long) * 3);
+    long *long_array;
     long expected_long_array[3] = {999, 9999, 99999};
-    char *should_not_be_allocated = arena_alloc(arena, 1);
+    char *should_not_be_allocated;
 
     TEST_FATAL(char_array != NULL, "char array allocated from arena was NULL.");
     TEST_FATAL(arena->head_allocation != NULL, "Arena's head allocation linked list node was NULL.");
@@ -153,6 +153,7 @@ void test_arena_alloc(void)
 
     TEST_EQUAL(arena->index, 13);
 
+    long_array = arena_alloc(arena, sizeof(long) * 3);
     TEST_FATAL(long_array != NULL, "long array allocated from arena was NULL.");
 
     TEST_FATAL(arena->head_allocation->next != NULL, "Link list addition failed.");
@@ -171,6 +172,7 @@ void test_arena_alloc(void)
     
     TEST_EQUAL(arena_alloc(NULL, 0), NULL);
 
+    should_not_be_allocated = arena_alloc(arena, 1);
     TEST_EQUAL(should_not_be_allocated, NULL);
 
     arena_destroy(arena);
