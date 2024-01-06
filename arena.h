@@ -137,7 +137,7 @@ Parameters:
   Arena *dest    |    The arena being copied to. Must be created/allocated
                       already.
 */
-ARENA_INLINE void arena_copy(Arena *src, Arena *dest);
+ARENA_INLINE void arena_copy(Arena *dest, Arena *src);
 
 
 /*
@@ -304,7 +304,7 @@ void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment)
 }
 
 
-ARENA_INLINE void arena_copy(Arena *src, Arena *dest)
+ARENA_INLINE void arena_copy(Arena *dest, Arena *src)
 {
     ARENA_MEMCPY(dest->region, src->region, src->index);
     dest->size = src->size;
