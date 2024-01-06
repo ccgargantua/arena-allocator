@@ -307,7 +307,6 @@ void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment)
 ARENA_INLINE void arena_copy(Arena *dest, Arena *src)
 {
     ARENA_MEMCPY(dest->region, src->region, src->index);
-    dest->size = src->size;
     dest->index = src->index;
 }
 
