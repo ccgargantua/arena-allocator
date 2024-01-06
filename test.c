@@ -124,8 +124,11 @@ void test_arena_create(void)
 void test_arena_alloc(void)
 {
     Arena *arena = arena_create(13 + sizeof(long) * 3);
-
     char *char_array = arena_alloc(arena, 13);
+    long *long_array = arena_alloc(arena, sizeof(long) * 3);
+    long expected_long_array[3] = {999, 9999, 99999};
+    char *should_not_be_allocated = arena_alloc(arena, 1);
+
     TEST_FATAL(char_array != NULL, "char array allocated from arena was NULL.");
     TEST_FATAL(arena->head_allocation != NULL, "Arena's head allocation linked list node was NULL.");
 
@@ -150,7 +153,6 @@ void test_arena_alloc(void)
 
     TEST_EQUAL(arena->index, 13);
 
-    long *long_array = arena_alloc(arena, sizeof(long) * 3);
     TEST_FATAL(long_array != NULL, "long array allocated from arena was NULL.");
 
     TEST_FATAL(arena->head_allocation->next != NULL, "Link list addition failed.");
@@ -158,8 +160,7 @@ void test_arena_alloc(void)
     TEST_EQUAL(arena->head_allocation->next->index, 13);
     TEST_EQUAL(arena->allocations, 2);
 
-    long expected[3] = {999, 9999, 99999};
-    memcpy(long_array, expected, sizeof(long) * 3);
+    memcpy(long_array, expected_long_array, sizeof(long) * 3);
     TEST_EQUAL(long_array[0], 999);
     TEST_EQUAL(long_array[1], 9999);
     TEST_EQUAL(long_array[2], 99999);
@@ -170,7 +171,6 @@ void test_arena_alloc(void)
     
     TEST_EQUAL(arena_alloc(NULL, 0), NULL);
 
-    char *should_not_be_allocated = arena_alloc(arena, 1);
     TEST_EQUAL(should_not_be_allocated, NULL);
 
     arena_destroy(arena);
@@ -217,12 +217,13 @@ void test_arena_clear(void)
 void test_arena_get_allocation_struct(void)
 {
     Arena *arena = arena_create(64);
+    char *ptr = arena_alloc(arena, 8);
+    Arena_Allocation *allocation_struct = arena_get_allocation_struct(arena, ptr);
+
     TEST_FATAL(arena != NULL, "Arena was NULL after creation.");
 
-    char *ptr = arena_alloc(arena, 8);
     TEST_FATAL(ptr != NULL, "Pointer was NULL after creation.");
 
-    Arena_Allocation *allocation_struct = arena_get_allocation_struct(arena, ptr);
     TEST_FATAL(allocation_struct != NULL, "Allocation struct could not be found through pointer comparison.");
     TEST_EQUAL(allocation_struct->index, 0);
     TEST_EQUAL(allocation_struct->size, 8);
