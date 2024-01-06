@@ -1,4 +1,4 @@
-CFLAGS := -ansi -g
+CFLAGS := -Wall -Wextra -Wstrict-prototypes -Wold-style-definition -Wmissing-prototypes -Wmissing-declarations -Wdeclaration-after-statement -pedantic -std=c89 -g
 EXAMPLES_C = $(wildcard code_examples/*.c)
 EXAMPLES_OUT = $(patsubst code_examples/%.c,%,$(EXAMPLES_C))
 
