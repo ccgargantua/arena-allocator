@@ -131,6 +131,17 @@ void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment);
 
 
 /*
+Copy the memory contents of one arena to another.
+
+Parameters:
+  Arena *src     |    The arena being copied, the source.
+  Arena *dest    |    The arena being copied to. Must be created/allocated
+                      already.
+*/
+ARENA_INLINE void arena_copy(Arena *src, Arena *dest);
+
+
+/*
 Reset the pointer to the arena region to the beginning
 of the allocation. Allows reuse of the memory without
 realloc or frees.
@@ -172,7 +183,7 @@ Arena_Allocation* arena_get_allocation_struct(Arena *arena, void *ptr);
 #ifdef ARENA_IMPLEMENTATION
 
 
-#if !defined(ARENA_MALLOC) || !defined(ARENA_FREE)
+#if !defined(ARENA_MALLOC) || !defined(ARENA_FREE) || !defined(ARENA_MEMCPY)
 
     #ifndef ARENA_SUPPRESS_MALLOC_WARN
         #warning "Using <stdlib.h> malloc and free, because a replacement for one or both was not specified before including 'arena.h'."
@@ -181,6 +192,9 @@ Arena_Allocation* arena_get_allocation_struct(Arena *arena, void *ptr);
     #include <stdlib.h>
     #define ARENA_MALLOC malloc
     #define ARENA_FREE free
+
+    #include <string.h>
+    #define ARENA_MEMCPY memcpy
 
 #endif /* !defined ARENA_MALLOC, ARENA_FREE */
 
@@ -288,6 +302,12 @@ void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment)
     }
 
     return arena_alloc(arena, size);
+}
+
+
+ARENA_INLINE void arena_copy(Arena *src, Arena *dest)
+{
+    ARENA_MEMCPY(dest->region, src->region, src->index);
 }
 
 
