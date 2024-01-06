@@ -90,6 +90,7 @@ static int temp_total;
 void test_arena_create(void);
 void test_arena_alloc(void);
 void test_arena_alloc_aligned(void);
+void test_arena_copy(void);
 void test_arena_clear(void);
 void test_arena_get_allocation_struct(void);
 
@@ -99,6 +100,7 @@ int main(void)
     REPORT(test_arena_create, "Arena creation suite");
     REPORT(test_arena_alloc, "Arena unaligned allocation suite");
     REPORT(test_arena_alloc_aligned, "Arena aligned allocation suite");
+    REPORT(test_arena_copy, "Arena copy suite");
     REPORT(test_arena_clear, "Arena clearing suite");
     REPORT(test_arena_get_allocation_struct, "Arena debug method 'arena_get_allocation_struct' suite");
 
@@ -203,6 +205,30 @@ void test_arena_alloc_aligned(void)
     TEST_EQUAL(arena->allocations, 5);
 
     arena_destroy(arena);
+}
+
+
+void test_arena_copy(void)
+{
+    Arena *arena_src = arena_create(1024);
+    Arena *arena_dest = arena_create(1024);
+    char *src_array;
+
+    TEST_FATAL(arena_src != NULL, "Source arena creation failed!");
+    TEST_FATAL(arena_dest != NULL, "Destination arena creation failed!");
+
+    src_array = arena_alloc(arena_src, 3);
+    TEST_FATAL(src_array != NULL, "Source arena allocation failed!");
+    src_array[0] = 'a';
+    src_array[1] = 'b';
+    src_array[2] = 'c';
+    arena_copy(arena_dest, arena_src);
+    TEST_EQUAL(arena_dest->region[0], 'a');
+    TEST_EQUAL(arena_dest->region[1], 'b');
+    TEST_EQUAL(arena_dest->region[2], 'c');
+    TEST_EQUAL(arena_dest->index, 3);
+    arena_destroy(arena_src);
+    arena_destroy(arena_dest);
 }
 
 
