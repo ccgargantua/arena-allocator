@@ -8,16 +8,16 @@ Single-header arena allocator. C89 Compatible.
 1. **[About](#about)**
   * 1.1 [Disclaimer](#disclaimer)
 2. **[Usage](#usage)**
-  * 2.1. [Including](#including)
-  * 2.2. [Functions](#functions)
+  * 2.1 [Including](#including)
+  * 2.2 [Functions](#functions)
 3. **[Compatibility](#compatibility)**
-  * 3.1. [Compilers](#compilers)
-  * 3.2. [Operating Systems](#operating-systems)
+  * 3.1 [Compilers](#compilers)
+  * 3.2 [Operating Systems](#operating-systems)
 4. **[Contributing](#contributing)**
-  * 4.1. [Basic Guidelines](#basic-guidelines)
-  * 4.2. [Modifications to `arena.h`](#modifications-to-arenah)
-  * 4.3. [Testing](#testing)
-  * 4.4. [Code Style](#code-style)
+  * 4.1 [Basic Guidelines](#basic-guidelines)
+  * 4.2 [Modifications to `arena.h`](#modifications-to-arenah)
+  * 4.3 [Testing](#testing)
+  * 4.4 [Code Style](#code-style)
 
 ---
 
