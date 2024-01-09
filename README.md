@@ -53,6 +53,25 @@ For one file in one translation unit, you need to define some macros before incl
 
 After doing this in **one** file in **one** translation unit, for **any other file** you can include normally with a lone `#include "arena.h"`. You can find usage examples in the [`code_examples/` folder](https://github.com/ccgargantua/arena-allocator/tree/main/code_examples).
 
+### Types
+
+There are two structs defined in `arena.h`. This lists each one along with its members.
+
+* **`Arena_Allocation`** The data structure for an arena allocation. Available only when `ARENA_DEBUG` is defined.
+  * `size_t index` The index in the arena in which the beginning of the allocation is located.
+    `size_t size` The size of the memory allocated to this allocation in bytes.
+    `char *pointer` The pointer associated for the allocation.
+    `struct Arena_Allocation_s *next` The next allocation in the linked list.
+
+
+* **`Arena`** The data structure for an arena.
+  * `char *region` The region of allocated memory.
+  * `size_t index` The index of the region for the next pointer to be distributed.
+  * `size_t size` The size of memory allocated to the arena in bytes.
+  * `unsigned long allocations` The number of arena allocations that have been made. Only available when `ARENA_DEBUG` is defined.
+  * `Arena_Allocation *head_allocation` The first allocation made in the arena (used for a linked list). Only available when `ARENA_DEBUG` is defined.
+
+
 ### Functions
 There is also documentation for each function in the form of comments above each forward declaration. Below is an almost direct copy-paste from `arena.h`.
 ```c
