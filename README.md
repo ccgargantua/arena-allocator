@@ -35,6 +35,29 @@ After doing this in **one** file in **one** translation unit, for **any other fi
 
 ---
 
+## Compatibility
+
+The code was written to build with any compiler and run on any platform that supports the C89 standard. However, testing has been somewhat limited and there are some issues with building on Windows with the `Makefile`. Please read all of the below information.
+
+### Compilers
+
+The tests and examples have been compiled and successfully run under the following compilers and versions:
+
+* Clang 17
+* GCC 13.2
+* MSVC 17.8
+
+### Operating Systems
+
+The tests and examples were compiled and successfully run on the following operating systems:
+
+* Ubuntu 20.04
+* Windows 10
+
+**NOTE** The Makefile currently has not been configured to work on Windows when running `$ make test` due to the use of valgrind and the absense of `.exe` extensions. This should be a simple fix and is on my TODO list (feel free to open an issue and fix this yourself!).
+
+---
+
 ## Contributing
 
 This project has very simple guidelines for contributing.
