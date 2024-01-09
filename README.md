@@ -15,7 +15,7 @@ Single-header arena allocator. C89 Compatible.
   * 3.2. [Operating Systems](#operating-systems)
 4. **[Contributing](#contributing)**
   * 4.1. [Basic Guidelines](#basic-guidelines)
-  * 4.2. [Modifications to `arena.h`](#modifications-to-arena.h)
+  * 4.2. [Modifications to `arena.h`](#modifications-to-arenah)
   * 4.3. [Testing](#testing)
   * 4.4. [Code Style](#code-style)
 
