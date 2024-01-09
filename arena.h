@@ -226,12 +226,7 @@ Arena* arena_create(size_t size)
 
 void* arena_alloc(Arena *arena, size_t size)
 {
-    if(arena == NULL)
-    {
-        return NULL;
-    }
-
-    if(arena->region == NULL)
+    if(arena == NULL || arena->region == NULL)
     {
         return NULL;
     }
@@ -279,12 +274,7 @@ void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment)
 {
     unsigned int offset;
 
-    if(arena == NULL)
-    {
-        return NULL;
-    }
-
-    if(arena->region == NULL)
+    if(arena == NULL || arena->region == NULL)
     {
         return NULL;
     }
@@ -306,6 +296,10 @@ void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment)
 
 ARENA_INLINE void arena_copy(Arena *dest, Arena *src)
 {
+    if(dest == NULL || src == NULL)
+    {
+        return;
+    }
     ARENA_MEMCPY(dest->region, src->region, src->index);
     dest->index = src->index;
 }
