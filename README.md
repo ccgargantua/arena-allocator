@@ -150,7 +150,8 @@ void arena_destroy(Arena *arena);
 /*
 Returns a pointer to the allocation struct associated
 with a pointer to a segment in the specified arena's
-region.
+region. This function is only available when ARENA_DEBUG
+is defined.
 
 Parameters:
   Arena *arena    |    The arena whose region should
