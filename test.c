@@ -90,6 +90,7 @@ static int temp_total;
 void test_arena_create(void);
 void test_arena_alloc(void);
 void test_arena_alloc_aligned(void);
+void test_arena_copy(void);
 void test_arena_clear(void);
 void test_arena_get_allocation_struct(void);
 
@@ -99,6 +100,7 @@ int main(void)
     REPORT(test_arena_create, "Arena creation suite");
     REPORT(test_arena_alloc, "Arena unaligned allocation suite");
     REPORT(test_arena_alloc_aligned, "Arena aligned allocation suite");
+    REPORT(test_arena_copy, "Arena copy suite");
     REPORT(test_arena_clear, "Arena clearing suite");
     REPORT(test_arena_get_allocation_struct, "Arena debug method 'arena_get_allocation_struct' suite");
 
@@ -125,9 +127,9 @@ void test_arena_alloc(void)
 {
     Arena *arena = arena_create(13 + sizeof(long) * 3);
     char *char_array = arena_alloc(arena, 13);
-    long *long_array = arena_alloc(arena, sizeof(long) * 3);
+    long *long_array;
     long expected_long_array[3] = {999, 9999, 99999};
-    char *should_not_be_allocated = arena_alloc(arena, 1);
+    char *should_not_be_allocated;
 
     TEST_FATAL(char_array != NULL, "char array allocated from arena was NULL.");
     TEST_FATAL(arena->head_allocation != NULL, "Arena's head allocation linked list node was NULL.");
@@ -153,6 +155,7 @@ void test_arena_alloc(void)
 
     TEST_EQUAL(arena->index, 13);
 
+    long_array = arena_alloc(arena, sizeof(long) * 3);
     TEST_FATAL(long_array != NULL, "long array allocated from arena was NULL.");
 
     TEST_FATAL(arena->head_allocation->next != NULL, "Link list addition failed.");
@@ -171,6 +174,7 @@ void test_arena_alloc(void)
     
     TEST_EQUAL(arena_alloc(NULL, 0), NULL);
 
+    should_not_be_allocated = arena_alloc(arena, 1);
     TEST_EQUAL(should_not_be_allocated, NULL);
 
     arena_destroy(arena);
@@ -201,6 +205,30 @@ void test_arena_alloc_aligned(void)
     TEST_EQUAL(arena->allocations, 5);
 
     arena_destroy(arena);
+}
+
+
+void test_arena_copy(void)
+{
+    Arena *arena_src = arena_create(1024);
+    Arena *arena_dest = arena_create(1024);
+    char *src_array;
+
+    TEST_FATAL(arena_src != NULL, "Source arena creation failed!");
+    TEST_FATAL(arena_dest != NULL, "Destination arena creation failed!");
+
+    src_array = arena_alloc(arena_src, 3);
+    TEST_FATAL(src_array != NULL, "Source arena allocation failed!");
+    src_array[0] = 'a';
+    src_array[1] = 'b';
+    src_array[2] = 'c';
+    arena_copy(arena_dest, arena_src);
+    TEST_EQUAL(arena_dest->region[0], 'a');
+    TEST_EQUAL(arena_dest->region[1], 'b');
+    TEST_EQUAL(arena_dest->region[2], 'c');
+    TEST_EQUAL(arena_dest->index, 3);
+    arena_destroy(arena_src);
+    arena_destroy(arena_dest);
 }
 
 

@@ -22,14 +22,13 @@ For one file in one translation unit, you need to define some macros before incl
 ```c
 #define ARENA_IMPLEMENTATION
 
-// You will get a warning if you don't specify:
-// either both of these...
-#define ARENA_MALLOC <stdlib_malloc_like_allocator> // defaults to stdlib malloc
-#define ARENA_FREE <stdlib_free_like_deallocator>   // defaults to stdlib free
-// ... or just this
-#define ARENA_SUPPRESS_MALLOC_WARN // Alternatively use compiler flag -DARENA_SUPPRESS_MALLOC_WARN
+// All of these are optional
+#define ARENA_MALLOC <stdlib_malloc_like_allocator>
+#define ARENA_FREE <stdlib_free_like_deallocator>
+#define ARENA_MEMCPY <stdlib_memcpy_like_copier>
 
-#include "arena.h"
+// for debug functionality, you can also do:
+#define ARENA_DEBUG
 ```
 
 After doing this in **one** file in **one** translation unit, for **any other file** you can include normally with a lone `#include "arena.h"`.

@@ -5,16 +5,15 @@ example.
 QUICK USAGE:
   One file in one translation unit must have the
   following before including "arena.h", replacing
-  the macro values appropriately when needed.
+  the macro values appropriately when desired.
 
 ```
 #define ARENA_IMPLEMENTATION
 
-// Either both of these...
+// All of these are optional
 #define ARENA_MALLOC <stdlib_malloc_like_allocator>
 #define ARENA_FREE <stdlib_free_like_deallocator>
-// ... or just this
-#define ARENA_SUPPRESS_MALLOC_WARN // alternatively using compiler flag -D with same name
+#define ARENA_MEMCPY <stdlib_memcpy_like_copier>
 
 // for debug functionality, you can also do:
 #define ARENA_DEBUG
@@ -131,6 +130,17 @@ void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment);
 
 
 /*
+Copy the memory contents of one arena to another.
+
+Parameters:
+  Arena *src     |    The arena being copied, the source.
+  Arena *dest    |    The arena being copied to. Must be created/allocated
+                      already.
+*/
+ARENA_INLINE void arena_copy(Arena *dest, Arena *src);
+
+
+/*
 Reset the pointer to the arena region to the beginning
 of the allocation. Allows reuse of the memory without
 realloc or frees.
@@ -172,17 +182,20 @@ Arena_Allocation* arena_get_allocation_struct(Arena *arena, void *ptr);
 #ifdef ARENA_IMPLEMENTATION
 
 
-#if !defined(ARENA_MALLOC) || !defined(ARENA_FREE)
-
-    #ifndef ARENA_SUPPRESS_MALLOC_WARN
-        #warning "Using <stdlib.h> malloc and free, because a replacement for one or both was not specified before including 'arena.h'."
-    #endif /* !ARENA_SUPPRESS_MALLOC_WARN */
-
+#ifndef ARENA_MALLOC
     #include <stdlib.h>
     #define ARENA_MALLOC malloc
-    #define ARENA_FREE free
+#endif
 
-#endif /* !defined ARENA_MALLOC, ARENA_FREE */
+#ifndef ARENA_FREE
+    #include <stdlib.h>
+    #define ARENA_FREE free
+#endif
+
+#ifndef ARENA_MEMCPY
+    #include <string.h>
+    #define ARENA_MEMCPY memcpy
+#endif
 
 
 Arena* arena_create(size_t size)
@@ -213,12 +226,7 @@ Arena* arena_create(size_t size)
 
 void* arena_alloc(Arena *arena, size_t size)
 {
-    if(arena == NULL)
-    {
-        return NULL;
-    }
-
-    if(arena->region == NULL)
+    if(arena == NULL || arena->region == NULL)
     {
         return NULL;
     }
@@ -266,12 +274,7 @@ void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment)
 {
     unsigned int offset;
 
-    if(arena == NULL)
-    {
-        return NULL;
-    }
-
-    if(arena->region == NULL)
+    if(arena == NULL || arena->region == NULL)
     {
         return NULL;
     }
@@ -291,7 +294,18 @@ void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment)
 }
 
 
-void arena_clear(Arena *arena)
+ARENA_INLINE void arena_copy(Arena *dest, Arena *src)
+{
+    if(dest == NULL || src == NULL)
+    {
+        return;
+    }
+    ARENA_MEMCPY(dest->region, src->region, src->index);
+    dest->index = src->index;
+}
+
+
+ARENA_INLINE void arena_clear(Arena *arena)
 {
     if(arena == NULL)
     {

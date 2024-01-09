@@ -1,7 +1,6 @@
 #include <stdio.h>  // printf
 
 #define ARENA_IMPLEMENTATION
-#define ARENA_SUPPRESS_MALLOC_WARN
 #include "../arena.h"
 
 int main(void)
