@@ -253,7 +253,8 @@ $ make test
 
 * **Comments** should describe *why* you did something, not *what* it is that you did. In other words, your code should be self-explanatory. Documentation for functions in the form of comments should be located above the function in the following format:
 
-```
+```c
+/*
 Description of function, description of function description of function.
 Description of function description of function, description of function
 description of function.
