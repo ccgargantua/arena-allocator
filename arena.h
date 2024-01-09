@@ -311,7 +311,7 @@ ARENA_INLINE void arena_copy(Arena *dest, Arena *src)
 }
 
 
-void arena_clear(Arena *arena)
+ARENA_INLINE void arena_clear(Arena *arena)
 {
     if(arena == NULL)
     {
