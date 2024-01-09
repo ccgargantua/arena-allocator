@@ -59,9 +59,9 @@ There are two structs defined in `arena.h`. This lists each one along with its m
 
 * **`Arena_Allocation`** The data structure for an arena allocation. Available only when `ARENA_DEBUG` is defined.
   * `size_t index` The index in the arena in which the beginning of the allocation is located.
-    `size_t size` The size of the memory allocated to this allocation in bytes.
-    `char *pointer` The pointer associated for the allocation.
-    `struct Arena_Allocation_s *next` The next allocation in the linked list.
+  * `size_t size` The size of the memory allocated to this allocation in bytes.
+  * `char *pointer` The pointer associated for the allocation.
+  * `struct Arena_Allocation_s *next` The next allocation in the linked list.
 
 
 * **`Arena`** The data structure for an arena.
