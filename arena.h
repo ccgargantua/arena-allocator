@@ -185,17 +185,17 @@ Arena_Allocation* arena_get_allocation_struct(Arena *arena, void *ptr);
 #ifndef ARENA_MALLOC
     #include <stdlib.h>
     #define ARENA_MALLOC malloc
-#endif
+#endif /* !ARENA_MALLOC */
 
 #ifndef ARENA_FREE
     #include <stdlib.h>
     #define ARENA_FREE free
-#endif
+#endif /* !ARENA_FREE */
 
 #ifndef ARENA_MEMCPY
     #include <string.h>
     #define ARENA_MEMCPY memcpy
-#endif
+#endif /* !ARENA_MEMCPY */
 
 
 Arena* arena_create(size_t size)
@@ -213,13 +213,14 @@ Arena* arena_create(size_t size)
         return NULL;
     }
 
+    arena->index = 0;
+    arena->size = size;
+
     #ifdef ARENA_DEBUG
     arena->head_allocation = NULL;
     arena->allocations = 0;
     #endif /* ARENA_DEBUG */
 
-    arena->index = 0;
-    arena->size = size;
     return arena;
 }
 
@@ -312,6 +313,8 @@ ARENA_INLINE void arena_clear(Arena *arena)
         return;
     }
 
+    arena->index = 0;
+
     #ifdef ARENA_DEBUG
 
     while(arena->head_allocation != NULL)
@@ -324,8 +327,6 @@ ARENA_INLINE void arena_clear(Arena *arena)
     arena->head_allocation = NULL;
 
     #endif /* ARENA_DEBUG */
-
-    arena->index = 0;
 }
 
 
@@ -336,6 +337,7 @@ void arena_destroy(Arena *arena)
         return;
     }
 
+    /* This will free the Arena_Allocation linked list */
     #ifdef ARENA_DEBUG
     arena_clear(arena);
     #endif /* ARENA_DEBUG */
