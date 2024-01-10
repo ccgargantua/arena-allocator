@@ -39,7 +39,7 @@ Whenever I share this project with other programmers, one of the most common res
 
 1. It shows that an outdated and, by consequence, harmful construct is still being enforced in the education system, which is where this construct is usually introduced and enforced.
 
-2. Very rarely does the person making this statement have an actual reason for believing it. Do you ever think about why you should "NEVER put implementation/logic code in a header file"? Simply regurgitating what you've heard without any basis for why you chose to agree with it does not help me in any way, and you should not expect me to just accept it as you have done.
+2. Very rarely does the person making this statement have an actual reason for believing it. Do you ever think about *why* you should "NEVER put implementation/logic code in a header file"? Simply regurgitating what you've heard without any basis for why you chose to agree with it does not help me in any way, and you should not expect me to just accept it as you have done.
 
 3. The largest and most valid criticism of header-only/single-header libraries is that a change to the header requires re-compilation of all files that include it. In the case of my project, making changes to `arena.h`, even though the actual implementation is only contained in the translation unit that `#define`'s the `ARENA_IMPLEMENTATION` macro, will result in the rebuild of all files that include it. The solution? Once `arena.h` is in the desired state, stop making changes!
 
