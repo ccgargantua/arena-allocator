@@ -35,7 +35,7 @@ You can learn more about arena/zone/region allocators by reading this [fantastic
 
 ### Single-Header Libraries
 
-Whenever I share this project with other programmers, one of the most common responses I receive is something along the lines of *You should NEVER put implementation/logic code in a header file!* I take issue with this statement for a three reasons:
+Whenever I share this project with other programmers, one of the most common responses I receive is something along the lines of: *You should NEVER put implementation/logic code in a header file!* I take issue with this statement for three reasons...
 
 1. It shows that an outdated and, by consequence, harmful construct is still being enforced in the education system, which is where this construct is usually introduced and enforced.
 
