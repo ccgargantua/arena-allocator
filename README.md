@@ -6,7 +6,9 @@ Single-header arena allocator. C89 Compatible.
 ## Table of Contents
 
 1. **[About](#about)**
-  * 1.1 [Disclaimer](#disclaimer)
+  * 1.1 [Arena Allocators](#arena-allocators)
+  * 1.2 [Single-Header Libraries](#single-header-libraries)
+  * 1.3 [Disclaimer](#disclaimer)
 2. **[Usage](#usage)**
   * 2.1 [Including](#including)
   * 2.2 [Functions](#functions)
