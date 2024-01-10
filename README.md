@@ -37,7 +37,7 @@ You can learn more about arena/zone/region allocators by reading this [fantastic
 
 Whenever I share this project with other programmers, one of the most common responses I receive is something along the lines of: *You should NEVER put implementation/logic code in a header file!* I take issue with this statement for three reasons...
 
-1. It shows that an outdated and, by consequence, harmful construct is still being enforced in the education system, which is where this construct is usually introduced and enforced.
+1. It shows that an outdated and, by consequence, harmful construct is still being enforced in the education system, which is where said construct is usually introduced.
 
 2. Very rarely does the person making this statement have an actual reason for believing it. Does this person ever think about *why* they should "NEVER put implementation/logic code in a header file"? Simply regurgitating what they've heard without any basis for *why* they chose to agree with it does not help me in any way, and this person should not expect me to just accept it as they have done.
 
