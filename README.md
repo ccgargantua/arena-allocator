@@ -22,11 +22,26 @@ Single-header arena allocator. C89 Compatible.
 ---
 
 ## About
+
+### Arena Allocators
+
 Arena allocators are a simple way to achieve easier, faster, and safer dynamic memory management by allowing multiple allocations to be freed as a group. This is done by allocating memory in large regions and then distributing portions of that memory as needed, reducing the amount of `malloc` calls (which are slow compared to simple pointer arithmetic).
 
 When you destroy the arena you also free it and all of its contents, reducing the amount of `free` calls which are also slow. Going further, you can clear arenas by simply resetting their memory pointers to `0`, allowing you to reuse them and eliminating the need for even more `malloc`'s and `free`'s.
 
 You can learn more about arena/zone/region allocators by reading this [fantastic article](https://www.rfleury.com/p/untangling-lifetimes-the-arena-allocator).
+
+### Single-Header Libraries
+
+Whenever I share this project with other programmers, one of the most common responses I receive is something along the lines of *You should NEVER put implementation/logic code in a header file!* I take issue with this statement for a three reasons:
+
+1. It shows that an outdated and, by consequence, harmful construct is still being enforced in the education system, which is where this construct is usually introduced and enforced.
+
+2. Very rarely does the person making this statement have an actual reason for believing it. Do you ever think about why you should "NEVER put implementation/logic code in a header file"? Simple regurgitating what you've heard without any basis for why you chose to agree with it does not help me in any way, and you should not expect me to just accept it as you have done.
+
+3. The largest and most valid criticism of header-only/single-header libraries is that a change to the header requires re-compilation of all files that include it. In the case of my project, making changes to `arena.h`, even though the actual implementation is only contained in the translation unit that `#define`'s the `ARENA_IMPLEMENTATION` macro, will result in the rebuild of all files that include it. The solution? Once `arena.h` is in the desired state, stop making changes!
+
+Linking is sluggish and complicated. Many beginners often times struggle with learning the process, and they are also the biggest culprit when it comes to writing unsafe code. This alone is enough reason for me to make this arena allocator a header-only library. My code (in its current state) is very small, roughly 200 lines. Why would I make you build and link such a small implementation when you could simply `#include` it once and start using it out of the box? If you really have a problem with it, this allocator in the single-header format does not prevent you from following the source+header construct if you so desire. Heck, feel free to fork it and make it source+header, it's open source for a reason!
 
 ### Disclaimer
 This does not implement a kernel-level allocator, but instead wraps `malloc` and `free` (standard library or custom, your choice).
