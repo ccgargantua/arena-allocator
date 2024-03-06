@@ -200,7 +200,15 @@ Arena_Allocation* arena_get_allocation_struct(Arena *arena, void *ptr);
 
 Arena* arena_create(size_t size)
 {
-    Arena *arena = ARENA_MALLOC(sizeof(Arena));
+    Arena *arena;
+
+    if(size == 0)
+    {
+        return NULL;
+    }
+
+    /* A malloc of 0 is implementation defined, so the above check is necessary */
+    arena = ARENA_MALLOC(sizeof(Arena));
     if(arena == NULL)
     {
         return NULL;
@@ -227,6 +235,11 @@ Arena* arena_create(size_t size)
 
 void* arena_alloc(Arena *arena, size_t size)
 {
+    if(size == 0)
+    {
+        return NULL;
+    }
+
     if(arena == NULL || arena->region == NULL)
     {
         return NULL;
@@ -274,6 +287,11 @@ void* arena_alloc(Arena *arena, size_t size)
 void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment)
 {
     unsigned int offset;
+
+    if(size == 0)
+    {
+        return NULL;
+    }
 
     if(arena == NULL || arena->region == NULL)
     {
