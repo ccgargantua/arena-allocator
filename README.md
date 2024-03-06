@@ -174,7 +174,7 @@ realloc or frees.
 Parameters:
   Arena *arena    |    The arena to be cleared.
 */
-void arena_clear(Arena* arena);
+ARENA_INLINE void arena_clear(Arena* arena);
 
 
 /*
