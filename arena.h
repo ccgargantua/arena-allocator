@@ -71,7 +71,8 @@ typedef struct
 
 /*
 Allocate and return a pointer to memory to the arena
-with a region with the specified size.
+with a region with the specified size. Providing a
+size of zero results in a failure.
 
 Parameters:
   size_t size    |    The size (in bytes) of the arena
@@ -87,7 +88,8 @@ Return a pointer to a portion of specified size of the
 specified arena's region. Nothing will restrict you
 from allocating more memory than you specified, so be
 mindful of your memory (as you should anyways) or you
-will get some hard-to-track bugs.
+will get some hard-to-track bugs. Providing a size of
+zero results in a failure.
 
 Parameters:
   Arena *arena    |    The arena of which the pointer
@@ -111,7 +113,8 @@ Return a pointer to a portion of specified size of the
 specified arena's region. Nothing will restrict you
 from allocating more memory than you specified, so be
 mindful of your memory (as you should anyways) or you
-will get some hard-to-track bugs.
+will get some hard-to-track bugs. Providing a size of
+zero results in a failure.
 
 Parameters:
   Arena *arena              |    The arena of which the pointer
