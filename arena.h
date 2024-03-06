@@ -33,7 +33,7 @@ QUICK USAGE:
 #include <stddef.h>
 
 
-#if __STDC_VERSION__ >= 199901L
+#if __STDC_VERSION__ >= 199901L && !defined(ARENA_DEBUG)
     #define ARENA_INLINE inline
 #else
     #define ARENA_INLINE
@@ -151,7 +151,7 @@ realloc or frees.
 Parameters:
   Arena *arena    |    The arena to be cleared.
 */
-void arena_clear(Arena* arena);
+ARENA_INLINE void arena_clear(Arena* arena);
 
 
 /*
