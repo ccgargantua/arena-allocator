@@ -40,6 +40,17 @@ QUICK USAGE:
 #endif /* __STDC_VERSION__ >= 199901L */
 
 
+#if __STDC_VERSION__ >= 201112L
+    #include <stdalign.h>
+    #define ARENA_ALIGNOF(type) alignof(type)
+#else
+    #define ARENA_ALIGNOF(type) offsetof(struct { char c; type d; }, d)
+#endif
+
+
+#define ARENA_DEFAULT_ALIGNMENT ARENA_ALIGNOF(size_t)
+
+
 #ifdef ARENA_DEBUG
 
 /* We are debugging this arena allocator, not your implementation of malloc/free */
@@ -102,7 +113,7 @@ Return:
   Pointer to arena region segment on success, NULL on
   failure.
 */
-void* arena_alloc(Arena *arena, size_t size);
+ARENA_INLINE void* arena_alloc(Arena *arena, size_t size);
 
 
 /*
@@ -236,8 +247,16 @@ Arena* arena_create(size_t size)
 }
 
 
-void* arena_alloc(Arena *arena, size_t size)
+ARENA_INLINE void* arena_alloc(Arena *arena, size_t size)
 {
+    return arena_alloc_aligned(arena, size, ARENA_DEFAULT_ALIGNMENT);
+}
+
+
+void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment)
+{
+    unsigned int offset;
+
     if(size == 0)
     {
         return NULL;
@@ -248,10 +267,25 @@ void* arena_alloc(Arena *arena, size_t size)
         return NULL;
     }
 
-    if(arena->size - arena->index < size)
+    if(alignment != 0)
+    {
+        offset = (size_t)(arena->region + arena->index) % alignment;
+    }
+    else
+    {
+        offset = 0;
+    }
+
+    if(arena->size - (arena->index + offset) < size)
     {
         return NULL;
     }
+
+    if(offset > 0)
+    {
+        arena->index = arena->index - offset + alignment;
+    }
+
 
     #ifdef ARENA_DEBUG
 
@@ -284,35 +318,6 @@ void* arena_alloc(Arena *arena, size_t size)
 
     arena->index += size;
     return arena->region + (arena->index - size);
-}
-
-
-void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment)
-{
-    unsigned int offset;
-
-    if(size == 0)
-    {
-        return NULL;
-    }
-
-    if(arena == NULL || arena->region == NULL)
-    {
-        return NULL;
-    }
-
-    offset = (size_t)(arena->region + arena->index) % alignment;
-    if(arena->size - (arena->index + offset) < size)
-    {
-        return NULL;
-    }
-
-    if(offset > 0)
-    {
-        arena->index = arena->index - offset + alignment;
-    }
-
-    return arena_alloc(arena, size);
 }
 
 
