@@ -286,7 +286,6 @@ void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment)
         arena->index = arena->index - offset + alignment;
     }
 
-
     #ifdef ARENA_DEBUG
 
     if(arena->head_allocation == NULL)
