@@ -47,9 +47,11 @@ QUICK USAGE:
     #define ARENA_ALIGNOF(type) offsetof(struct { char c; type d; }, d)
 #endif
 
+
 #ifndef ARENA_DEFAULT_ALIGNMENT
     #define ARENA_DEFAULT_ALIGNMENT ARENA_ALIGNOF(size_t)
 #endif
+
 
 #ifdef ARENA_DEBUG
 
