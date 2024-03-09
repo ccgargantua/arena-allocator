@@ -7,10 +7,10 @@
 #include <stdlib.h>
 
 
-static int passed_tests = 0;
-static int total_tests = 0;
-static int temp_passed;
-static int temp_total;
+int passed_tests = 0;
+int total_tests = 0;
+int temp_passed;
+int temp_total;
 
 
 #define REPORT(msg)       fprintf(stderr, "FAILURE: '%s' at %s:%d\n",       msg, __FILE__, __LINE__)
