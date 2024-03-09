@@ -73,6 +73,7 @@ int temp_total;
 #define ARENA_DEBUG
 #define ARENA_IMPLEMENTATION
 #define ARENA_SUPPRESS_MALLOC_WARN
+#define ARENA_DEFAULT_ALIGNMENT 0
 #include "arena.h"
 
 
