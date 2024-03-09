@@ -66,6 +66,10 @@ For one file in one translation unit, you need to define some macros before incl
 
 // for debug functionality, you can also do:
 #define ARENA_DEBUG
+
+// If you would like to change the default alignment for
+// allocations, you can define:
+#define ARENA_DEFAULT_ALIGNMENT <alignment_value>
 ```
 
 After doing this in **one** file in **one** translation unit, for **any other file** you can include normally with a lone `#include "arena.h"`. You can find usage examples in the [`code_examples/` folder](https://github.com/ccgargantua/arena-allocator/tree/main/code_examples).
@@ -111,8 +115,10 @@ Return a pointer to a portion of specified size of the
 specified arena's region. Nothing will restrict you
 from allocating more memory than you specified, so be
 mindful of your memory (as you should anyways) or you
-will get some hard-to-track bugs. Providing a size of
-zero results in a failure.
+will get some hard-to-track bugs. By default, memory is
+aligned by sizeof(size_t), but you can change this by
+#defining ARENA_DEFAULT_ALIGNMENT before #include'ing
+arena.h. Providing a size of zero results in a failure.
 
 Parameters:
   Arena *arena    |    The arena of which the pointer
@@ -125,12 +131,12 @@ Return:
   Pointer to arena region segment on success, NULL on
   failure.
 */
-void* arena_alloc(Arena *arena, size_t size);
+ARENA_INLINE void* arena_alloc(Arena *arena, size_t size);
 
 
 /*
-Same as arena_alloc, except you can specify a
-memory alignment for allocations.
+Same as arena_alloc, except you can specify a memory
+alignment for allocations.
 
 Return a pointer to a portion of specified size of the
 specified arena's region. Nothing will restrict you
@@ -189,8 +195,7 @@ void arena_destroy(Arena *arena);
 /*
 Returns a pointer to the allocation struct associated
 with a pointer to a segment in the specified arena's
-region. This function is only available when ARENA_DEBUG
-is defined.
+region.
 
 Parameters:
   Arena *arena    |    The arena whose region should

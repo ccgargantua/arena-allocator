@@ -101,8 +101,10 @@ Return a pointer to a portion of specified size of the
 specified arena's region. Nothing will restrict you
 from allocating more memory than you specified, so be
 mindful of your memory (as you should anyways) or you
-will get some hard-to-track bugs. Providing a size of
-zero results in a failure.
+will get some hard-to-track bugs. By default, memory is
+aligned by sizeof(size_t), but you can change this by
+#defining ARENA_DEFAULT_ALIGNMENT before #include'ing
+arena.h. Providing a size of zero results in a failure.
 
 Parameters:
   Arena *arena    |    The arena of which the pointer
@@ -119,8 +121,8 @@ ARENA_INLINE void* arena_alloc(Arena *arena, size_t size);
 
 
 /*
-Same as arena_alloc, except you can specify a
-memory alignment for allocations.
+Same as arena_alloc, except you can specify a memory
+alignment for allocations.
 
 Return a pointer to a portion of specified size of the
 specified arena's region. Nothing will restrict you
