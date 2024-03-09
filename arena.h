@@ -34,7 +34,7 @@ QUICK USAGE:
 
 
 #if __STDC_VERSION__ >= 199901L && !defined(ARENA_DEBUG)
-    #define ARENA_INLINE inline
+    #define ARENA_INLINE static inline
 #else
     #define ARENA_INLINE
 #endif /* __STDC_VERSION__ >= 199901L */
