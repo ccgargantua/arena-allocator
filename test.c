@@ -43,49 +43,7 @@ TEST(exp, desc)       | TEST is used whenever TEST_EQUAL doesn't fit.
                           printed.
 */
 
-
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-
-
-static int passed_tests = 0;
-static int total_tests = 0;
-
-
-#define TEST(exp, desc) do {                                                        \
-    ++total_tests;                                                                  \
-    if( (exp) ) {                                                                   \
-        ++passed_tests;                                                             \
-    }                                                                               \
-    else                                                                            \
-        fprintf(stderr, "  Failed test '%s' at %s:%d\n", desc, __FILE__, __LINE__); \
-} while(0)
-
-
-#define TEST_EQUAL(a, b) do{TEST(a == b, #a " != " #b);}while(0)
-
-
-#define TEST_FATAL(exp, desc) TEST(exp, "FATAL: " desc); do{if(!(exp))abort();}while(0)
-
-
-static int temp_passed;
-static int temp_total;
-
-
-#define REPORT(suite, name) do {                                                                             \
-    temp_passed = passed_tests;                                                                              \
-    temp_total = total_tests;                                                                                \
-    suite();                                                                                                 \
-    fprintf(stderr, "Passed %d/%d tests in '%s'\n", passed_tests-temp_passed, total_tests-temp_total, name); \
-} while(0)
-
-
-#define ARENA_DEBUG
-#define ARENA_IMPLEMENTATION
-#define ARENA_SUPPRESS_MALLOC_WARN
-#include "arena.h"
-
+#include "test.h"
 
 void test_arena_create(void);
 void test_arena_alloc(void);
@@ -97,12 +55,12 @@ void test_arena_get_allocation_struct(void);
 
 int main(void)
 {
-    REPORT(test_arena_create, "Arena creation suite");
-    REPORT(test_arena_alloc, "Arena unaligned allocation suite");
-    REPORT(test_arena_alloc_aligned, "Arena aligned allocation suite");
-    REPORT(test_arena_copy, "Arena copy suite");
-    REPORT(test_arena_clear, "Arena clearing suite");
-    REPORT(test_arena_get_allocation_struct, "Arena debug method 'arena_get_allocation_struct' suite");
+    SUITE(test_arena_create, "Arena creation suite");
+    SUITE(test_arena_alloc, "Arena unaligned allocation suite");
+    SUITE(test_arena_alloc_aligned, "Arena aligned allocation suite");
+    SUITE(test_arena_copy, "Arena copy suite");
+    SUITE(test_arena_clear, "Arena clearing suite");
+    SUITE(test_arena_get_allocation_struct, "Arena debug method 'arena_get_allocation_struct' suite");
 
     fprintf(stderr, "\nFinished. Passed %d/%d tests.\n", passed_tests, total_tests);
 
@@ -116,7 +74,7 @@ void test_arena_create(void)
     TEST_FATAL(arena != NULL, "Arena was NULL after creation. Fatal.");
     TEST_FATAL(arena->region != NULL, "Arena region was NULL");
     TEST_EQUAL(arena->allocations, 0);
-    TEST_EQUAL(arena->head_allocation, NULL);
+    TEST_NULL(arena->head_allocation);
     TEST_EQUAL(arena->size, 32);
     TEST_EQUAL(arena->index, 0);
     arena_destroy(arena);
@@ -125,7 +83,7 @@ void test_arena_create(void)
 
 void test_arena_alloc(void)
 {
-    Arena *arena = arena_create(13 + sizeof(long) * 3);
+    Arena *arena = arena_create(ARENA_DEFAULT_ALIGNMENT + 13 + sizeof(long) * 3);
     char *char_array = arena_alloc(arena, 13);
     long *long_array;
     long expected_long_array[3] = {999, 9999, 99999};
@@ -139,20 +97,7 @@ void test_arena_alloc(void)
     TEST_EQUAL(arena->allocations, 1);
 
     memcpy(char_array, "Hello, world!", 13);
-    TEST_EQUAL(char_array[0], 'H');
-    TEST_EQUAL(char_array[1], 'e');
-    TEST_EQUAL(char_array[2], 'l');
-    TEST_EQUAL(char_array[3], 'l');
-    TEST_EQUAL(char_array[4], 'o');
-    TEST_EQUAL(char_array[5], ',');
-    TEST_EQUAL(char_array[6], ' ');
-    TEST_EQUAL(char_array[7], 'w');
-    TEST_EQUAL(char_array[8], 'o');
-    TEST_EQUAL(char_array[9], 'r');
-    TEST_EQUAL(char_array[10], 'l');
-    TEST_EQUAL(char_array[11], 'd');
-    TEST_EQUAL(char_array[12], '!');
-
+    TEST_ARRAY_EQUAL(char_array, "Hello, world!", 13);
     TEST_EQUAL(arena->index, 13);
 
     long_array = arena_alloc(arena, sizeof(long) * 3);
@@ -164,18 +109,15 @@ void test_arena_alloc(void)
     TEST_EQUAL(arena->allocations, 2);
 
     memcpy(long_array, expected_long_array, sizeof(long) * 3);
-    TEST_EQUAL(long_array[0], 999);
-    TEST_EQUAL(long_array[1], 9999);
-    TEST_EQUAL(long_array[2], 99999);
-
+    TEST_ARRAY_EQUAL(long_array, expected_long_array, 3);
     TEST_EQUAL(arena->index, arena->size);
 
     /* Failures */
     
-    TEST_EQUAL(arena_alloc(NULL, 0), NULL);
+    TEST_NULL(arena_alloc(NULL, 0));
 
     should_not_be_allocated = arena_alloc(arena, 1);
-    TEST_EQUAL(should_not_be_allocated, NULL);
+    TEST_NULL(should_not_be_allocated);
 
     arena_destroy(arena);
 }
@@ -223,9 +165,7 @@ void test_arena_copy(void)
     src_array[1] = 'b';
     src_array[2] = 'c';
     arena_copy(arena_dest, arena_src);
-    TEST_EQUAL(arena_dest->region[0], 'a');
-    TEST_EQUAL(arena_dest->region[1], 'b');
-    TEST_EQUAL(arena_dest->region[2], 'c');
+    TEST_ARRAY_EQUAL(arena_dest->region, arena_src->region, 3);
     TEST_EQUAL(arena_dest->index, 3);
     arena_destroy(arena_src);
     arena_destroy(arena_dest);
