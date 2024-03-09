@@ -3,9 +3,9 @@ Tests are contained in testing suite functions, the forware declarations
 of which are bundled together. A testing suite function should exist for
 each function within `arena.h`, and should be placed relative to where
 the function they are testing is placed in regard to the functions around
-it for both forward declarations, implementations, and `REPORT`s.
+it for both forward declarations, implementations, and `SUITE`s.
 
-After implementing a testing suite, you should use the `REPORT` in
+After implementing a testing suite, you should use the `SUITE` in
 `main()`.
 
 Tests should comply with C89 in order to ensure backwards compaitbility is
@@ -13,34 +13,24 @@ still achievable.
 
 Within the testing suite, the following macros should be used:
 
-TEST_FATAL(exp, desc) | TEST_FATAL should be used whenever a failure
-                        could cause future tests to crash the process.
+TEST_FATAL(exp, desc)     | TEST_FATAL should be used whenever a failure
+                            could cause future tests to crash the process.
+                            If exp evaluates to false (0), the test executable
+                            will abort completely and the desc string will be
+                            printed.
 
-                        EX/ An `arena_create` failing and returning NULL
-                            could cause an access within the test to
-                            segfault.
+                            EX/ An `arena_create` failing and returning NULL
+                                could cause an access within the test to
+                                segfault.
 
-                        ARGS
-                          exp  | The expression being tests. If the `exp`
-                                 evaluates as true, it passes. Otherwise
-                                 it fails and aborts the program and
-                                 prints the `desc`.
-                          desc | The description to be printed on failure.
+TEST_EQUAL(a, b)          | TEST_EQUAL will fail when a != b
 
-TEST_EQUAL(a, b)      | TEST_EQUAL should be used when two things have
-                        equal value. Use whenever possible.
+TEST_NULL(a)              | TEST_NULL will fail when a != NULL
 
-                        ARGS
-                          If a == b, the test passes. Otherwise, it fails and
-                          prints an appropriate failure message.
+TEST_NOT_NULL(a)          | TEST_NOT_NULL will fail when a == NULL
 
-
-TEST(exp, desc)       | TEST is used whenever TEST_EQUAL doesn't fit.
-
-                        ARGS
-                          If `exp` evaluates at true, the test passes.
-                          Otherwise, the test fails and the `desc` is
-                          printed.
+TEST_ARRAY_EQUAL(a, b, s) | TEST_ARRAY_EQUAL will fail if any elements differ
+                            in two arrays a, b that are both of size s
 */
 
 #include "test.h"
