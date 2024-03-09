@@ -17,6 +17,10 @@ QUICK USAGE:
 
 // for debug functionality, you can also do:
 #define ARENA_DEBUG
+
+// If you would like to change the default alignment for
+// allocations, you can define:
+#define ARENA_DEFAULT_ALIGNMENT <alignment_value>
 ```
 
   After doing that, you can `#include "arena.h"`
