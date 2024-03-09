@@ -17,6 +17,10 @@ QUICK USAGE:
 
 // for debug functionality, you can also do:
 #define ARENA_DEBUG
+
+// If you would like to change the default alignment for
+// allocations, you can define:
+#define ARENA_DEFAULT_ALIGNMENT <alignment_value>
 ```
 
   After doing that, you can `#include "arena.h"`
@@ -38,6 +42,19 @@ QUICK USAGE:
 #else
     #define ARENA_INLINE
 #endif /* __STDC_VERSION__ >= 199901L */
+
+
+#if __STDC_VERSION__ >= 201112L
+    #include <stdalign.h>
+    #define ARENA_ALIGNOF(type) alignof(type)
+#else
+    #define ARENA_ALIGNOF(type) offsetof(struct { char c; type d; }, d)
+#endif
+
+
+#ifndef ARENA_DEFAULT_ALIGNMENT
+    #define ARENA_DEFAULT_ALIGNMENT ARENA_ALIGNOF(size_t)
+#endif
 
 
 #ifdef ARENA_DEBUG
@@ -88,8 +105,10 @@ Return a pointer to a portion of specified size of the
 specified arena's region. Nothing will restrict you
 from allocating more memory than you specified, so be
 mindful of your memory (as you should anyways) or you
-will get some hard-to-track bugs. Providing a size of
-zero results in a failure.
+will get some hard-to-track bugs. By default, memory is
+aligned by alignof(size_t), but you can change this by
+#defining ARENA_DEFAULT_ALIGNMENT before #include'ing
+arena.h. Providing a size of zero results in a failure.
 
 Parameters:
   Arena *arena    |    The arena of which the pointer
@@ -102,12 +121,12 @@ Return:
   Pointer to arena region segment on success, NULL on
   failure.
 */
-void* arena_alloc(Arena *arena, size_t size);
+ARENA_INLINE void* arena_alloc(Arena *arena, size_t size);
 
 
 /*
-Same as arena_alloc, except you can specify a
-memory alignment for allocations.
+Same as arena_alloc, except you can specify a memory
+alignment for allocations.
 
 Return a pointer to a portion of specified size of the
 specified arena's region. Nothing will restrict you
@@ -236,8 +255,16 @@ Arena* arena_create(size_t size)
 }
 
 
-void* arena_alloc(Arena *arena, size_t size)
+ARENA_INLINE void* arena_alloc(Arena *arena, size_t size)
 {
+    return arena_alloc_aligned(arena, size, ARENA_DEFAULT_ALIGNMENT);
+}
+
+
+void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment)
+{
+    unsigned int offset;
+
     if(size == 0)
     {
         return NULL;
@@ -248,7 +275,20 @@ void* arena_alloc(Arena *arena, size_t size)
         return NULL;
     }
 
-    if(arena->size - arena->index < size)
+    if(alignment != 0)
+    {
+        offset = (size_t)(arena->region + arena->index) % alignment;
+        if(offset > 0)
+        {
+            arena->index = arena->index - offset + alignment;
+        }
+    }
+    else
+    {
+        offset = 0;
+    }
+
+    if(arena->size - (arena->index + offset) < size)
     {
         return NULL;
     }
@@ -284,35 +324,6 @@ void* arena_alloc(Arena *arena, size_t size)
 
     arena->index += size;
     return arena->region + (arena->index - size);
-}
-
-
-void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment)
-{
-    unsigned int offset;
-
-    if(size == 0)
-    {
-        return NULL;
-    }
-
-    if(arena == NULL || arena->region == NULL)
-    {
-        return NULL;
-    }
-
-    offset = (size_t)(arena->region + arena->index) % alignment;
-    if(arena->size - (arena->index + offset) < size)
-    {
-        return NULL;
-    }
-
-    if(offset > 0)
-    {
-        arena->index = arena->index - offset + alignment;
-    }
-
-    return arena_alloc(arena, size);
 }
 
 
