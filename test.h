@@ -38,10 +38,6 @@ int temp_total;
 #define TEST_NULL(a)                TEST(a == NULL,         #a " is not NULL")
 #define TEST_NOT_NULL(a)            TEST(a != NULL,         #a " is NULL")
 #define TEST_EQUAL(a, b)            TEST(a == b,            #a " does not equal " #b)
-#define TEST_NOT_EQUAL(a, b)        TEST(a != b,            #a " equals "         #b)
-#define TEST_STRING_EQUAL(a, b)     TEST(strcmp(a, b) == 0, #a " does not equal " #b)
-#define TEST_STRING_NOT_EQUAL(a, b) TEST(strcmp(a, b) != 0, #a " equals "         #b)
-
 
 #define TEST_ARRAY_EQUAL(a, b, s)                                 \
     do                                                            \
