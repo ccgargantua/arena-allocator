@@ -83,7 +83,7 @@ void test_arena_create(void)
 
 void test_arena_alloc(void)
 {
-    Arena *arena = arena_create(ARENA_DEFAULT_ALIGNMENT + 13 + sizeof(long) * 3);
+    Arena *arena = arena_create(13 + sizeof(long) * 3);
     char *char_array = arena_alloc(arena, 13);
     long *long_array;
     long expected_long_array[3] = {999, 9999, 99999};
