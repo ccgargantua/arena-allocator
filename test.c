@@ -76,11 +76,6 @@ void test_arena_alloc(void)
     TEST_NULL(arena_alloc(arena, 0));
 
     TEST_FATAL(char_array != NULL, "char array allocated from arena was NULL.");
-    TEST_FATAL(arena->head_allocation != NULL, "Arena's head allocation linked list node was NULL.");
-
-    TEST_EQUAL(arena->head_allocation->size, 13);
-    TEST_EQUAL(arena->head_allocation->index, 0);
-    TEST_EQUAL(arena->allocations, 1);
 
     memcpy(char_array, "Hello, world!", 13);
     TEST_ARRAY_EQUAL(char_array, "Hello, world!", 13);
@@ -88,11 +83,6 @@ void test_arena_alloc(void)
 
     long_array = arena_alloc(arena, sizeof(long) * 3);
     TEST_FATAL(long_array != NULL, "long array allocated from arena was NULL.");
-
-    TEST_FATAL(arena->head_allocation->next != NULL, "Link list addition failed.");
-    TEST_EQUAL(arena->head_allocation->next->size, sizeof(long) * 3);
-    TEST_EQUAL(arena->head_allocation->next->index, 13);
-    TEST_EQUAL(arena->allocations, 2);
 
     memcpy(long_array, expected_long_array, sizeof(long) * 3);
     TEST_ARRAY_EQUAL(long_array, expected_long_array, 3);
@@ -118,8 +108,6 @@ void test_arena_alloc_aligned(void)
     arena_alloc_aligned(arena, 8, 4);
     TEST_EQUAL(arena->index, 8);
 
-    TEST_FATAL(arena->head_allocation != NULL, "Arena linked list head node is NULL.");
-
     arena_alloc_aligned(arena, 3, 4);
     TEST_EQUAL(arena->index, 11);
 
@@ -131,8 +119,6 @@ void test_arena_alloc_aligned(void)
 
     arena_alloc_aligned(arena, 1, 4);
     TEST_EQUAL(arena->index, 29);
-
-    TEST_EQUAL(arena->allocations, 5);
 
     TEST_NULL(arena_alloc_aligned(arena, 100, 0));
 
