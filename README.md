@@ -94,8 +94,6 @@ There are two structs defined in `arena.h`. This lists each one along with its m
 
 
 ### Functions
-There is also documentation for each function in the form of comments above each forward declaration. Below is an almost direct copy-paste from `arena.h`.
-```c
 /*
 Allocate and return a pointer to memory to the arena
 with a region with the specified size. Providing a
@@ -207,6 +205,30 @@ Parameters:
                        associated with it.
 */
 Arena_Allocation* arena_get_allocation_struct(Arena *arena, void *ptr);
+
+
+/*
+Adds an arena allocation to the arena's linked list of
+allocations under debug.
+
+Parameters:
+  Arena *arena    |    The arena whose allocation list
+                       should be added to
+  size_t size     |    The size of the allocation being
+                       added.
+*/
+void arena_add_allocation(Arena *arena, size_t size);
+
+
+/*
+Deletes the arena's linked list of allocations under
+debug.
+
+Parameters:
+  Arena *arena    |    The arena whose allocation list
+                       is being deleted.
+*/
+void arena_delete_allocation_list(Arena *arena);
 ```
 
 ---
