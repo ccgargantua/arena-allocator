@@ -13,6 +13,8 @@ void test_arena_alloc_aligned(void);
 void test_arena_copy(void);
 void test_arena_clear(void);
 void test_arena_get_allocation_struct(void);
+void test_arena_add_allocation(void);
+void test_arena_delete_allocation_list(void);
 
 
 int passed_tests = 0;

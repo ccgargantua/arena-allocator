@@ -41,6 +41,8 @@ int main(void)
     SUITE(test_arena_copy, "Arena copy suite");
     SUITE(test_arena_clear, "Arena clearing suite");
     SUITE(test_arena_get_allocation_struct, "Arena debug method 'arena_get_allocation_struct' suite");
+    SUITE(test_arena_add_allocation, "Arena debug method 'arena_add_allocation' suite");
+    SUITE(test_arena_delete_allocation_list, "Arena debug method 'arena_delete_allocation_list' suite");
 
     fprintf(stderr, "\nFinished. Passed %d/%d tests.\n", passed_tests, total_tests);
 
@@ -198,3 +200,42 @@ void test_arena_get_allocation_struct(void)
     arena_destroy(arena);
 }
 
+
+void test_arena_add_allocation(void)
+{
+    Arena *arena = arena_create(1024);
+
+    arena_alloc(arena, 10);
+    TEST_FATAL(arena->head_allocation != NULL, "Arena head allocation was NULL after first allocation.");
+    TEST_EQUAL(arena->head_allocation->size, 10);
+    TEST_EQUAL(arena->head_allocation->next, NULL);
+    TEST_EQUAL(arena->allocations, 1);
+
+    arena_alloc(arena, 15);
+    TEST_FATAL(arena->head_allocation->next != NULL, "Arena end allocation was NULL after first allocation.");
+    TEST_EQUAL(arena->head_allocation->next->size, 15);
+    TEST_EQUAL(arena->head_allocation->next->next, NULL);
+    TEST_EQUAL(arena->allocations, 2);
+
+    arena_alloc(arena, 1);
+    TEST_FATAL(arena->head_allocation->next->next != NULL, "Arena end allocation was NULL after first allocation.");
+    TEST_EQUAL(arena->head_allocation->next->next->size, 1);
+    TEST_EQUAL(arena->head_allocation->next->next->next, NULL);
+    TEST_EQUAL(arena->allocations, 3);
+
+    arena_destroy(arena);
+}
+
+
+void test_arena_delete_allocation_list(void)
+{
+    Arena *arena = arena_create(1024);
+    arena_alloc(arena, 10);
+    arena_alloc(arena, 15);
+    arena_alloc(arena, 1);
+    arena_delete_allocation_list(arena);
+    TEST_NULL(arena->head_allocation);
+    TEST_EQUAL(arena->allocations, 0);
+
+    arena_destroy(arena);
+}
