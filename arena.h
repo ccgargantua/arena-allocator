@@ -350,7 +350,7 @@ ARENA_INLINE size_t arena_copy(Arena *dest, Arena *src)
     }
 
     ARENA_MEMCPY(dest->region, src->region, bytes);
-    dest->index = src->index;
+    dest->index = bytes;
 
     return bytes;
 }
