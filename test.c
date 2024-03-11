@@ -183,6 +183,7 @@ void test_arena_get_allocation_struct(void)
 {
     Arena *arena = arena_create(64);
     char *ptr = arena_alloc(arena, 8);
+    char fake = 'a';
     Arena_Allocation *allocation_struct = arena_get_allocation_struct(arena, ptr);
 
     TEST_FATAL(arena != NULL, "Arena was NULL after creation.");
@@ -192,6 +193,8 @@ void test_arena_get_allocation_struct(void)
     TEST_FATAL(allocation_struct != NULL, "Allocation struct could not be found through pointer comparison.");
     TEST_EQUAL(allocation_struct->index, 0);
     TEST_EQUAL(allocation_struct->size, 8);
+    TEST_NULL(arena_get_allocation_struct(arena, &fake));
 
     arena_destroy(arena);
 }
+
