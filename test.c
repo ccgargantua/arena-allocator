@@ -8,9 +8,6 @@ it for both forward declarations, implementations, and `SUITE`s.
 After implementing a testing suite, you should use the `SUITE` in
 `main()`.
 
-Tests should comply with C89 in order to ensure backwards compaitbility is
-still achievable.
-
 Within the testing suite, the following macros should be used:
 
 TEST_FATAL(exp, desc)     | TEST_FATAL should be used whenever a failure
