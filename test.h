@@ -13,10 +13,6 @@ int temp_passed;
 int temp_total;
 
 
-#define HELP_STRINGIFY(x) #x
-#define STRINGIFY(x) HELP_STRINGIFY(x)
-
-
 #define PRINT_BUFFER_SIZE 1024
 char print_buffer[PRINT_BUFFER_SIZE];
 int print_buffer_index = 0;
