@@ -22,18 +22,18 @@ int print_buffer_index = 0;
 #define REPORT_FATAL(msg) print_buffer_index += snprintf(print_buffer + print_buffer_index, PRINT_BUFFER_SIZE - print_buffer_index, "  FATAL FAILURE: '%s' at %s:%d\n", msg, __FILE__, __LINE__)
 
 
-#define TEST(exp, msg)                            \
-    do                                            \
-    {                                             \
-        if(!(exp))                                \
-        {                                         \
-            REPORT(msg);                          \
-        }                                         \
-        else                                      \
-        {                                         \
-            passed_tests++;                       \
-        }                                         \
-        total_tests++;                            \
+#define TEST(exp, msg)      \
+    do                      \
+    {                       \
+        if(!(exp))          \
+        {                   \
+            REPORT(msg);    \
+        }                   \
+        else                \
+        {                   \
+            passed_tests++; \
+        }                   \
+        total_tests++;      \
     }while(0)
 
 
@@ -45,20 +45,20 @@ int print_buffer_index = 0;
 #define TEST_EQUAL(a, b)            TEST(a == b,            #a " does not equal " #b)
 
 
-#define TEST_ARRAY_EQUAL(a, b, s)                                           \
-    do                                                                      \
-    {                                                                       \
-        int i;                                                              \
-        total_tests++;                                                      \
-        for(i = 0; i < s; i++)                                              \
-        {                                                                   \
-            if(a[i] != b[i])                                                \
-            {                                                               \
-                REPORT(#a " does not equal " #b);                           \
-                break;                                                      \
-            }                                                               \
-        }                                                                   \
-        passed_tests++;                                                     \
+#define TEST_ARRAY_EQUAL(a, b, s)                 \
+    do                                            \
+    {                                             \
+        int i;                                    \
+        total_tests++;                            \
+        for(i = 0; i < s; i++)                    \
+        {                                         \
+            if(a[i] != b[i])                      \
+            {                                     \
+                REPORT(#a " does not equal " #b); \
+                break;                            \
+            }                                     \
+        }                                         \
+        passed_tests++;                           \
     }while(0)
 
 
