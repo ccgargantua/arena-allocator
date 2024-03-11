@@ -182,6 +182,8 @@ Parameters:
 void arena_destroy(Arena *arena);
 
 
+#ifdef ARENA_DEBUG
+
 /*
 Returns a pointer to the allocation struct associated
 with a pointer to a segment in the specified arena's
@@ -196,8 +198,32 @@ Parameters:
                        find an allocation struct
                        associated with it.
 */
-#ifdef ARENA_DEBUG
 Arena_Allocation* arena_get_allocation_struct(Arena *arena, void *ptr);
+
+
+/*
+Adds an arena allocation to the arena's linked list of
+allocations under debug.
+
+Parameters:
+  Arena *arena    |    The arena whose allocation list
+                       should be added to
+  size_t size     |    The size of the allocation being
+                       added.
+*/
+void arena_add_allocation(Arena *arena, size_t size);
+
+
+/*
+Deletes the arena's linked list of allocations under
+debug.
+
+Parameters:
+  Arena *arena    |    The arena whose allocation list
+                       is being deleted.
+*/
+void arena_delete_allocation_list(Arena *arena);
+
 #endif /* ARENA_DEBUG */
 
 
@@ -294,32 +320,7 @@ void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment)
     }
 
     #ifdef ARENA_DEBUG
-
-    if(arena->head_allocation == NULL)
-    {
-        arena->head_allocation = malloc(sizeof(Arena_Allocation));
-        arena->head_allocation->index = arena->index;
-        arena->head_allocation->size = size;
-        arena->head_allocation->pointer = arena->region + arena->index;
-        arena->head_allocation->next = NULL;
-    }
-    else
-    {
-        Arena_Allocation *current = arena->head_allocation;
-        while(current->next != NULL)
-        {
-            current = current->next;
-        }
-
-        current->next = malloc(sizeof(Arena_Allocation));
-        current->next->index = arena->index;
-        current->next->size = size;
-        current->next->pointer = arena->region + arena->index;
-        current->next->next = NULL;
-    }
-
-    arena->allocations++;
-
+    arena_add_allocation(arena, size);
     #endif /* ARENA_DEBUG */
 
     arena->index += size;
@@ -348,16 +349,7 @@ ARENA_INLINE void arena_clear(Arena *arena)
     arena->index = 0;
 
     #ifdef ARENA_DEBUG
-
-    while(arena->head_allocation != NULL)
-    {
-        Arena_Allocation *next = arena->head_allocation->next;
-        free(arena->head_allocation);
-        arena->head_allocation = next;
-    }
-    arena->allocations = 0;
-    arena->head_allocation = NULL;
-
+    arena_delete_allocation_list(arena);
     #endif /* ARENA_DEBUG */
 }
 
@@ -369,9 +361,8 @@ void arena_destroy(Arena *arena)
         return;
     }
 
-    /* This will free the Arena_Allocation linked list */
     #ifdef ARENA_DEBUG
-    arena_clear(arena);
+    arena_delete_allocation_list(arena);
     #endif /* ARENA_DEBUG */
 
     if(arena->region != NULL)
@@ -398,6 +389,48 @@ Arena_Allocation* arena_get_allocation_struct(Arena *arena, void *ptr)
     }
 
     return NULL;
+}
+
+
+void arena_add_allocation(Arena *arena, size_t size)
+{
+    if(arena->head_allocation == NULL)
+    {
+        arena->head_allocation = malloc(sizeof(Arena_Allocation));
+        arena->head_allocation->index = arena->index;
+        arena->head_allocation->size = size;
+        arena->head_allocation->pointer = arena->region + arena->index;
+        arena->head_allocation->next = NULL;
+    }
+    else
+    {
+        Arena_Allocation *current = arena->head_allocation;
+        while(current->next != NULL)
+        {
+            current = current->next;
+        }
+
+        current->next = malloc(sizeof(Arena_Allocation));
+        current->next->index = arena->index;
+        current->next->size = size;
+        current->next->pointer = arena->region + arena->index;
+        current->next->next = NULL;
+    }
+
+    arena->allocations++;
+}
+
+
+void arena_delete_allocation_list(Arena *arena)
+{
+    while(arena->head_allocation != NULL)
+    {
+        Arena_Allocation *next = arena->head_allocation->next;
+        free(arena->head_allocation);
+        arena->head_allocation = next;
+    }
+    arena->allocations = 0;
+    arena->head_allocation = NULL;
 }
 
 #endif /* ARENA_DEBUG */
