@@ -33,6 +33,16 @@ TEST_ARRAY_EQUAL(a, b, s) | TEST_ARRAY_EQUAL will fail if any elements differ
 #include "test.h"
 
 
+void test_arena_create(void);
+void test_arena_alloc(void);
+void test_arena_alloc_aligned(void);
+void test_arena_copy(void);
+void test_arena_clear(void);
+void test_arena_get_allocation_struct(void);
+void test_arena_add_allocation(void);
+void test_arena_delete_allocation_list(void);
+
+
 int main(void)
 {
     SUITE(test_arena_create, "Arena creation suite");

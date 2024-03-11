@@ -7,16 +7,6 @@
 #include <stdlib.h>
 
 
-void test_arena_create(void);
-void test_arena_alloc(void);
-void test_arena_alloc_aligned(void);
-void test_arena_copy(void);
-void test_arena_clear(void);
-void test_arena_get_allocation_struct(void);
-void test_arena_add_allocation(void);
-void test_arena_delete_allocation_list(void);
-
-
 int passed_tests = 0;
 int total_tests = 0;
 int temp_passed;
