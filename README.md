@@ -11,7 +11,7 @@ Single-header arena allocator. C89 Compatible.
   * 1.3 [Disclaimer](#disclaimer)
 2. **[Usage](#usage)**
   * 2.1 [Including](#including)
-  * 2.2 [Functions](#functions)
+  * 2.2 [Functions and Macros](#functions-and-macros)
 3. **[Compatibility](#compatibility)**
   * 3.1 [Compilers](#compilers)
   * 3.2 [Operating Systems](#operating-systems)
@@ -32,6 +32,10 @@ Arena allocators are a simple way to achieve easier, faster, and safer dynamic m
 When you destroy the arena you also free it and all of its contents, reducing the amount of `free` calls which are also slow. Going further, you can clear arenas by simply resetting their memory pointers to `0`, allowing you to reuse them and eliminating the need for even more `malloc`'s and `free`'s.
 
 You can learn more about arena/zone/region allocators by reading this [fantastic article](https://www.rfleury.com/p/untangling-lifetimes-the-arena-allocator).
+
+### C89 Compliance
+
+I'll keep this short. I am maintaining C89 compliance for fun, not because I use it. I personally am a C11 enjoyer. If you think C89 is the only way, well, good for you! But you're wrong.
 
 ### Single-Header Libraries
 
@@ -54,25 +58,13 @@ This does not implement a kernel-level allocator, but instead wraps `malloc` and
 Documentation for the arena allocator can all be found in `arena.h`. There is a comment at the top of the header file with quick instructions for usage for your convenience.
 
 ### Including
-For one file in one translation unit, you need to define some macros before including `arena.h`. The two optional macros `ARENA_MALLOC` and `ARENA_FREE` can be assigned to alternative `malloc`-like and `free`-like allocators and deallocators respectively.
-
+For **one file in one translation unit**, you need the following:
 ```c
 #define ARENA_IMPLEMENTATION
-
-// All of these are optional
-#define ARENA_MALLOC <stdlib_malloc_like_allocator>
-#define ARENA_FREE <stdlib_free_like_deallocator>
-#define ARENA_MEMCPY <stdlib_memcpy_like_copier>
-
-// for debug functionality, you can also do:
-#define ARENA_DEBUG
-
-// If you would like to change the default alignment for
-// allocations, you can define:
-#define ARENA_DEFAULT_ALIGNMENT <alignment_value>
+#include "arena.h"
 ```
 
-After doing this in **one** file in **one** translation unit, for **any other file** you can include normally with a lone `#include "arena.h"`. You can find usage examples in the [`code_examples/` folder](https://github.com/ccgargantua/arena-allocator/tree/main/code_examples).
+From that point, other files in other translation units can simply `#include "arena.h"` normally. There are additional macros you can define/use. See the section on [functions and macros](#functions-and-macros).
 
 ### Types
 
@@ -93,7 +85,7 @@ There are two structs defined in `arena.h`. This lists each one along with its m
   * `Arena_Allocation *head_allocation` The first allocation made in the arena (used for a linked list). Only available when `ARENA_DEBUG` is defined.
 
 
-### Functions
+### Functions and macros
 ```c
 /*
 Allocate and return a pointer to memory to the arena
@@ -235,6 +227,30 @@ Parameters:
 void arena_delete_allocation_list(Arena *arena);
 ```
 
+In your code, you can define some optional macros. `ARENA_MALLOC`, `ARENA_FREE` and `ARENA_MEMCPY` can be assigned to alternative `malloc`-like, `free`-like, and `memcpy`-like functions respectively, and `arena.h` will use them in place of standard library functions. You can access additional debug functionality for keeping track of allocations by defining `ARENA_DEBUG`. Finally, you can also specify a default value for allocation alignment by defining a value for `ARENA_DEFAULT_ALIGNMENT`. See below for examples.
+
+```c
+// All of these are optional
+
+// Replace standard library functions
+#define ARENA_MALLOC <stdlib_malloc_like_allocator>
+#define ARENA_FREE <stdlib_free_like_deallocator>
+#define ARENA_MEMCPY <stdlib_memcpy_like_copier>
+
+// for debug functionality:
+#define ARENA_DEBUG
+
+// If you would like to change the default alignment for
+// allocations:
+#define ARENA_DEFAULT_ALIGNMENT <alignment_value>
+```
+
+There is also a macro for determining alignment of types. Like everything else, it is also C89-friendly, although when compiling under C11 it will use `stdalign.h`'s `alignof`.
+
+```c
+ARENA_ALIGNOF(type) // Gives alignment of `type`
+```
+
 ---
 
 ## Compatibility
@@ -284,24 +300,23 @@ At the moment there is no documentation for the code style, but it should be rel
 
 ### Testing
 
-To test the code, build and run the tests with:
-
-```
-$ make tests
-$ ./test
-```
-
-If you change `arena.h` whatsoever, **run the tests before opening a PR**. If you open a PR with modifictions to the code and the tests don't all pass, make a comment on your PR stating which test you believe is wrong and is preventing you from passing all of the tests. If any test fails and your PR doesn't have a comment that claims to correct a failed test, your PR will be ignored.
+If you change `arena.h` whatsoever, **run the tests before opening a PR**. If you open a PR with modifictions to the code and the tests don't all pass, make a comment on your PR stating which test you believe is wrong and is preventing you from passing all of the tests. If any test fails and your PR doesn't have a comment that claims to correct a failed test, your PR will be ignored closed.
 
 Outside of addressing bugs and feature requests, fulfilling a feature request or bug fix for functionality within `arena.h` permits modifying or adding relevant testing code within `test.c`, and you must do so if you want your PR to be acknowledged. There is documentation for testing code within `test.c` at the top of the file in the form of comments.
 
-The tests must also pass through valgrind leak-free.
+The tests must also pass through valgrind leak-free, and `arena.h` **must** be C89 compliant. You should check this using the `Makefile`, but if for some reason you can't or don't want to, compile `test.c` with
 
 ```
-$ valgrind ./test
+-Werror -Wall -Wextra -Wstrict-prototypes -Wold-style-definition -Wmissing-prototypes -Wmissing-declarations -Wdeclaration-after-statement
 ```
 
-You can build the tests and run them under valgrind in one command with:
+And for compliance, compile `test_compliance.c` with
+
+```
+-pedantic -std=c89 -Werror -Wall -Wextra -Wstrict-prototypes -Wold-style-definition -Wmissing-prototypes -Wmissing-declarations -Wdeclaration-after-statement
+```
+
+As I said, you can do all of this with the `Makefile`
 
 ```
 $ make test
