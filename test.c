@@ -50,7 +50,9 @@ int main(void)
 
 void test_arena_create(void)
 {
-    Arena *arena = arena_create(32);
+    Arena *arena = arena_create(0);
+    TEST_NULL(arena);
+    arena = arena_create(32);
     TEST_FATAL(arena != NULL, "Arena was NULL after creation. Fatal.");
     TEST_FATAL(arena->region != NULL, "Arena region was NULL");
     TEST_EQUAL(arena->allocations, 0);
@@ -68,6 +70,8 @@ void test_arena_alloc(void)
     long *long_array;
     long expected_long_array[3] = {999, 9999, 99999};
     char *should_not_be_allocated;
+
+    TEST_NULL(arena_alloc(arena, 0));
 
     TEST_FATAL(char_array != NULL, "char array allocated from arena was NULL.");
     TEST_FATAL(arena->head_allocation != NULL, "Arena's head allocation linked list node was NULL.");
@@ -107,6 +111,8 @@ void test_arena_alloc_aligned(void)
 {
     Arena *arena = arena_create(64);
 
+    TEST_NULL(arena_alloc_aligned(arena, 0, 0));
+
     arena_alloc_aligned(arena, 8, 4);
     TEST_EQUAL(arena->index, 8);
 
@@ -126,6 +132,8 @@ void test_arena_alloc_aligned(void)
 
     TEST_EQUAL(arena->allocations, 5);
 
+    TEST_NULL(arena_alloc_aligned(arena, 100, 0));
+
     arena_destroy(arena);
 }
 
@@ -133,11 +141,15 @@ void test_arena_alloc_aligned(void)
 void test_arena_copy(void)
 {
     Arena *arena_src = arena_create(1024);
-    Arena *arena_dest = arena_create(1024);
+    Arena *arena_dest = arena_create(500);
     char *src_array;
 
     TEST_FATAL(arena_src != NULL, "Source arena creation failed!");
     TEST_FATAL(arena_dest != NULL, "Destination arena creation failed!");
+
+    TEST_EQUAL(arena_copy(NULL, arena_src), 0);
+    TEST_EQUAL(arena_copy(arena_dest, NULL), 0);
+    TEST_EQUAL(arena_copy(arena_dest, arena_src), 0);
 
     src_array = arena_alloc(arena_src, 3);
     TEST_FATAL(src_array != NULL, "Source arena allocation failed!");
@@ -147,6 +159,11 @@ void test_arena_copy(void)
     TEST_EQUAL(arena_copy(arena_dest, arena_src), 3);
     TEST_ARRAY_EQUAL(arena_dest->region, arena_src->region, 3);
     TEST_EQUAL(arena_dest->index, 3);
+
+    arena_src->index = arena_src->size;
+    TEST_EQUAL(arena_copy(arena_dest, arena_src), arena_dest->size);
+    TEST_EQUAL(arena_dest->size, arena_dest->index);
+
     arena_destroy(arena_src);
     arena_destroy(arena_dest);
 }
@@ -159,8 +176,6 @@ void test_arena_clear(void)
     arena_clear(arena);
     TEST_EQUAL(arena->index, 0);
     arena_destroy(arena);
-    arena = NULL;
-    TEST_NULL(arena);
 }
 
 
