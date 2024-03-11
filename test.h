@@ -13,13 +13,13 @@ int temp_passed;
 int temp_total;
 
 
-#define PRINT_BUFFER_SIZE 1024
-char print_buffer[PRINT_BUFFER_SIZE];
-int print_buffer_index = 0;
+#define BUFFER_SIZE 1024
+char buffer[BUFFER_SIZE];
+int buffer_index = 0;
 
 
-#define REPORT(msg)       print_buffer_index += snprintf(print_buffer + print_buffer_index, PRINT_BUFFER_SIZE - print_buffer_index, "  FAILURE: '%s' at %s:%d\n",       msg, __FILE__, __LINE__)
-#define REPORT_FATAL(msg) print_buffer_index += snprintf(print_buffer + print_buffer_index, PRINT_BUFFER_SIZE - print_buffer_index, "  FATAL FAILURE: '%s' at %s:%d\n", msg, __FILE__, __LINE__)
+#define REPORT(msg)       buffer_index += snprintf(buffer + buffer_index, BUFFER_SIZE - buffer_index, "  FAILURE: '%s' at %s:%d\n",       msg, __FILE__, __LINE__)
+#define REPORT_FATAL(msg) buffer_index += snprintf(buffer + buffer_index, BUFFER_SIZE - buffer_index, "  FATAL FAILURE: '%s' at %s:%d\n", msg, __FILE__, __LINE__)
 
 
 #define TEST(exp, msg)      \
@@ -69,9 +69,9 @@ int print_buffer_index = 0;
         temp_total = total_tests;                                                                                \
         suite();                                                                                                 \
         fprintf(stderr, "Passed %d/%d tests in '%s'\n", passed_tests-temp_passed, total_tests-temp_total, name); \
-        fprintf(stderr, "%s", print_buffer);                                                                     \
-        print_buffer_index = 0;                                                                                  \
-        print_buffer[0] = '\0';                                                                                  \
+        fprintf(stderr, "%s", buffer);                                                                           \
+        buffer_index = 0;                                                                                        \
+        buffer[0] = '\0';                                                                                        \
     } while(0)
 
 
