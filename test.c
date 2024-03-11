@@ -114,13 +114,13 @@ void test_arena_alloc_aligned(void)
 
     arena_alloc_aligned(arena, 3, 4);
     TEST_EQUAL(arena->index, 11);
-    
+
     arena_alloc_aligned(arena, 12, 4);
     TEST_EQUAL(arena->index, 24);
-    
+
     arena_alloc_aligned(arena, 3, 4);
     TEST_EQUAL(arena->index, 27);
-    
+
     arena_alloc_aligned(arena, 1, 4);
     TEST_EQUAL(arena->index, 29);
 
@@ -144,7 +144,7 @@ void test_arena_copy(void)
     src_array[0] = 'a';
     src_array[1] = 'b';
     src_array[2] = 'c';
-    arena_copy(arena_dest, arena_src);
+    TEST_EQUAL(arena_copy(arena_dest, arena_src), 3);
     TEST_ARRAY_EQUAL(arena_dest->region, arena_src->region, 3);
     TEST_EQUAL(arena_dest->index, 3);
     arena_destroy(arena_src);
@@ -159,6 +159,8 @@ void test_arena_clear(void)
     arena_clear(arena);
     TEST_EQUAL(arena->index, 0);
     arena_destroy(arena);
+    arena = NULL;
+    TEST_NULL(arena);
 }
 
 
