@@ -158,8 +158,11 @@ Parameters:
   Arena *src     |    The arena being copied, the source.
   Arena *dest    |    The arena being copied to. Must be created/allocated
                       already.
+
+Return:
+  Number of bytes copied.
 */
-ARENA_INLINE void arena_copy(Arena *dest, Arena *src);
+ARENA_INLINE size_t arena_copy(Arena *dest, Arena *src);
 
 
 /*
@@ -179,7 +182,7 @@ Free the memory allocated for the entire arena region.
 Parameters:
   Arena *arena    |    The arena to be destroyed.
 */
-void arena_destroy(Arena *arena);
+ARENA_INLINE void arena_destroy(Arena *arena);
 
 
 #ifdef ARENA_DEBUG
@@ -328,14 +331,28 @@ void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment)
 }
 
 
-ARENA_INLINE void arena_copy(Arena *dest, Arena *src)
+ARENA_INLINE size_t arena_copy(Arena *dest, Arena *src)
 {
+    size_t bytes;
+
     if(dest == NULL || src == NULL)
     {
-        return;
+        return 0;
     }
-    ARENA_MEMCPY(dest->region, src->region, src->index);
+
+    if(src->index < dest->size)
+    {
+        bytes = src->index;
+    }
+    else
+    {
+        bytes = dest->size;
+    }
+
+    ARENA_MEMCPY(dest->region, src->region, bytes);
     dest->index = src->index;
+
+    return bytes;
 }
 
 
@@ -354,7 +371,7 @@ ARENA_INLINE void arena_clear(Arena *arena)
 }
 
 
-void arena_destroy(Arena *arena)
+ARENA_INLINE void arena_destroy(Arena *arena)
 {
     if(arena == NULL)
     {
@@ -429,6 +446,7 @@ void arena_delete_allocation_list(Arena *arena)
         free(arena->head_allocation);
         arena->head_allocation = next;
     }
+
     arena->allocations = 0;
     arena->head_allocation = NULL;
 }

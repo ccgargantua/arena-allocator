@@ -94,6 +94,7 @@ There are two structs defined in `arena.h`. This lists each one along with its m
 
 
 ### Functions
+```c
 /*
 Allocate and return a pointer to memory to the arena
 with a region with the specified size. Providing a
@@ -166,8 +167,11 @@ Parameters:
   Arena *src     |    The arena being copied, the source.
   Arena *dest    |    The arena being copied to. Must be created/allocated
                       already.
+
+Return:
+  Number of bytes copied.
 */
-ARENA_INLINE void arena_copy(Arena *dest, Arena *src);
+ARENA_INLINE size_t arena_copy(Arena *dest, Arena *src);
 
 
 /*
@@ -187,7 +191,7 @@ Free the memory allocated for the entire arena region.
 Parameters:
   Arena *arena    |    The arena to be destroyed.
 */
-void arena_destroy(Arena *arena);
+ARENA_INLINE void arena_destroy(Arena *arena);
 
 
 /*
