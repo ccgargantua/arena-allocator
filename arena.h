@@ -395,7 +395,14 @@ ARENA_INLINE void arena_destroy(Arena *arena)
 
 Arena_Allocation* arena_get_allocation_struct(Arena *arena, void *ptr)
 {
-    Arena_Allocation *current = arena->head_allocation;
+    Arena_Allocation *current;
+
+    if(arena == NULL || ptr == NULL)
+    {
+        return NULL;
+    }
+
+    current = arena->head_allocation;
     while(current != NULL)
     {
         if(current->pointer == (char *)ptr)
@@ -411,6 +418,11 @@ Arena_Allocation* arena_get_allocation_struct(Arena *arena, void *ptr)
 
 void arena_add_allocation(Arena *arena, size_t size)
 {
+    if(arena == NULL)
+    {
+        return;
+    }
+
     if(arena->head_allocation == NULL)
     {
         arena->head_allocation = malloc(sizeof(Arena_Allocation));
@@ -440,6 +452,11 @@ void arena_add_allocation(Arena *arena, size_t size)
 
 void arena_delete_allocation_list(Arena *arena)
 {
+    if(arena == NULL)
+    {
+        return;
+    }
+
     while(arena->head_allocation != NULL)
     {
         Arena_Allocation *next = arena->head_allocation->next;

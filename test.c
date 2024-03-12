@@ -184,6 +184,9 @@ void test_arena_get_allocation_struct(void)
     char fake = 'a';
     Arena_Allocation *allocation_struct = arena_get_allocation_struct(arena, ptr);
 
+    TEST_NULL(arena_get_allocation_struct(NULL, ptr));
+    TEST_NULL(arena_get_allocation_struct(arena, NULL));
+
     TEST_FATAL(arena != NULL, "Arena was NULL after creation.");
 
     TEST_FATAL(ptr != NULL, "Pointer was NULL after creation.");
