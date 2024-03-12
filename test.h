@@ -13,7 +13,7 @@ int temp_passed;
 int temp_total;
 
 
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 4096
 char buffer[BUFFER_SIZE];
 int buffer_index = 0;
 
