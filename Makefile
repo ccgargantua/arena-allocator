@@ -1,4 +1,5 @@
-CFLAGS := -Werror -Wall -Wextra -Wstrict-prototypes -Wold-style-definition -Wmissing-prototypes -Wmissing-declarations -Wdeclaration-after-statement -g
+CFLAGS = -Werror -Wall -Wextra
+COMPLIANCE_FLAGS = -pedantic -std=c89 -Wstrict-prototypes -Wold-style-definition -Wmissing-prototypes -Wmissing-declarations -Wdeclaration-after-statement -g
 EXAMPLES_C = $(wildcard code_examples/*.c)
 EXAMPLES_OUT = $(patsubst code_examples/%.c,%,$(EXAMPLES_C))
 
@@ -7,7 +8,7 @@ tests:
 
 compliance:
 	@echo "C89 compliance check..."
-	@$(CC) $(CFLAGS) -pedantic -std=c89 -o test_compliance test_compliance.c
+	@$(CC) $(CFLAGS) $(COMPLIANCE_FLAGS) -o test_compliance test_compliance.c
 	@rm -f test_compliance
 	@echo "C89 compliant."
 
