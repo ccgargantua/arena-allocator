@@ -1,63 +1,33 @@
-/*
-Tests are contained in testing suite functions, the forware declarations
-of which are bundled together. A testing suite function should exist for
-each function within `arena.h`, and should be placed relative to where
-the function they are testing is placed in regard to the functions around
-it for both forward declarations, implementations, and `SUITE`s.
-
-After implementing a testing suite, you should use the `SUITE` in
-`main()`.
-
-Within the testing suite, the following macros should be used:
-
-TEST_FATAL(exp, desc)     | TEST_FATAL should be used whenever a failure
-                            could cause future tests to crash the process.
-                            If exp evaluates to false (0), the test executable
-                            will abort completely and the desc string will be
-                            printed.
-
-                            EX/ An `arena_create` failing and returning NULL
-                                could cause an access within the test to
-                                segfault.
-
-TEST_EQUAL(a, b)          | TEST_EQUAL will fail when a != b
-
-TEST_NULL(a)              | TEST_NULL will fail when a != NULL
-
-TEST_NOT_NULL(a)          | TEST_NOT_NULL will fail when a == NULL
-
-TEST_ARRAY_EQUAL(a, b, s) | TEST_ARRAY_EQUAL will fail if any elements differ
-                            in two arrays a, b that are both of size s
-*/
+//     Tests are contained in testing suite functions, the forware declarations
+//     of which are bundled together. A testing suite function should exist for
+//     each function within `arena.h`, and should be placed relative to where
+//     the function they are testing is placed in regard to the functions around
+//     it for both forward declarations, implementations, and `SUITE`s.
+//
+//     After implementing a testing suite, you should use the `SUITE` in
+//     `main()`.
+//
+//     Within the testing suite, the following macros should be used:
+//
+//     TEST_FATAL(exp, desc)     | TEST_FATAL should be used whenever a failure
+//                                 could cause future tests to crash the process.
+//                                 If exp evaluates to false (0), the test executable
+//                                 will abort completely and the desc string will be
+//                                 printed.
+//
+//                                 EX/ An `arena_create` failing and returning NULL
+//                                     could cause an access within the test to
+//                                     segfault.
+//
+//     TEST_EQUAL(a, b)          | TEST_EQUAL will fail when a != b
+//
+//     TEST_NULL(a)              | TEST_NULL will fail when a != NULL
+//
+//     TEST_NOT_NULL(a)          | TEST_NOT_NULL will fail when a == NULL
+//
+//     TEST_ARRAY_EQUAL(a, b, s) | TEST_ARRAY_EQUAL will fail if any elements differ
 
 #include "test.h"
-
-
-void test_arena_create(void);
-void test_arena_alloc(void);
-void test_arena_alloc_aligned(void);
-void test_arena_copy(void);
-void test_arena_clear(void);
-void test_arena_get_allocation_struct(void);
-void test_arena_add_allocation(void);
-void test_arena_delete_allocation_list(void);
-
-
-int main(void)
-{
-    SUITE(test_arena_create, "Arena creation suite");
-    SUITE(test_arena_alloc, "Arena unaligned allocation suite");
-    SUITE(test_arena_alloc_aligned, "Arena aligned allocation suite");
-    SUITE(test_arena_copy, "Arena copy suite");
-    SUITE(test_arena_clear, "Arena clearing suite");
-    SUITE(test_arena_get_allocation_struct, "Arena debug method 'arena_get_allocation_struct' suite");
-    SUITE(test_arena_add_allocation, "Arena debug method 'arena_add_allocation' suite");
-    SUITE(test_arena_delete_allocation_list, "Arena debug method 'arena_delete_allocation_list' suite");
-
-    fprintf(stderr, "\nFinished. Passed %d/%d tests.\n", passed_tests, total_tests);
-
-    return 0;
-}
 
 
 void test_arena_create(void)
@@ -237,4 +207,21 @@ void test_arena_delete_allocation_list(void)
     TEST_EQUAL(arena->allocations, 0);
 
     arena_destroy(arena);
+}
+
+
+int main(void)
+{
+    SUITE(test_arena_create, "Arena creation suite");
+    SUITE(test_arena_alloc, "Arena unaligned allocation suite");
+    SUITE(test_arena_alloc_aligned, "Arena aligned allocation suite");
+    SUITE(test_arena_copy, "Arena copy suite");
+    SUITE(test_arena_clear, "Arena clearing suite");
+    SUITE(test_arena_get_allocation_struct, "Arena debug method 'arena_get_allocation_struct' suite");
+    SUITE(test_arena_add_allocation, "Arena debug method 'arena_add_allocation' suite");
+    SUITE(test_arena_delete_allocation_list, "Arena debug method 'arena_delete_allocation_list' suite");
+
+    fprintf(stderr, "\nFinished. Passed %d/%d tests.\n", passed_tests, total_tests);
+
+    return 0;
 }
