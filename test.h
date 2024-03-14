@@ -18,8 +18,18 @@ char buffer[BUFFER_SIZE];
 int buffer_index = 0;
 
 
-#define REPORT(msg)       buffer_index += snprintf(buffer + buffer_index, BUFFER_SIZE - buffer_index, "  FAILURE: '%s' at %s:%d\n",       msg, __FILE__, __LINE__)
-#define REPORT_FATAL(msg) buffer_index += snprintf(buffer + buffer_index, BUFFER_SIZE - buffer_index, "  FATAL FAILURE: '%s' at %s:%d\n", msg, __FILE__, __LINE__)
+#define REPORT(msg)                                        \
+    buffer_index += snprintf(buffer + buffer_index,        \
+                             BUFFER_SIZE - buffer_index,   \
+                             "  FAILURE: '%s' at %s:%d\n", \
+                             msg, __FILE__, __LINE__)
+
+
+#define REPORT_FATAL(msg)                                        \
+    buffer_index += snprintf(buffer + buffer_index,              \
+                             BUFFER_SIZE - buffer_index,         \
+                             "  FATAL FAILURE: '%s' at %s:%d\n", \
+                             msg, __FILE__, __LINE__)
 
 
 #define TEST(exp, msg)      \
