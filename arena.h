@@ -101,6 +101,22 @@ Arena* arena_create(size_t size);
 
 
 /*
+Reallocate an arena's region to a greater or equal size.
+Returns the realloc'd arena on success, and NULL on failure.
+Passing a null arena, providing a size less than or equal
+to the arena's current size, or a failed realloc call will
+all result in returning NULL.
+
+Parameters
+  Arena *arena    |    The arena whose region is being
+                       realloc'd
+  size_t size     |    The size the arena's region is
+                       being changed to
+*/
+Arena* arena_realloc(Arena *arena, size_t size);
+
+
+/*
 Return a pointer to a portion of specified size of the
 specified arena's region. Nothing will restrict you
 from allocating more memory than you specified, so be
@@ -243,6 +259,11 @@ void arena_delete_allocation_list(Arena *arena);
     #define ARENA_FREE free
 #endif /* !ARENA_FREE */
 
+#ifndef ARENA_REALLOC
+    #include <stdlib.h>
+    #define ARENA_REALLOC realloc
+#endif
+
 #ifndef ARENA_MEMCPY
     #include <string.h>
     #define ARENA_MEMCPY memcpy
@@ -280,6 +301,24 @@ Arena* arena_create(size_t size)
     arena->allocations = 0;
     #endif /* ARENA_DEBUG */
 
+    return arena;
+}
+
+
+Arena* arena_realloc(Arena *arena, size_t size)
+{
+    if(arena == NULL || size <= arena->size)
+    {
+        return NULL;
+    }
+
+    arena->region = ARENA_REALLOC(arena->region, size);
+    if(arena->region == NULL)
+    {
+        return NULL;
+    }
+
+    arena->size = size;
     return arena;
 }
 
