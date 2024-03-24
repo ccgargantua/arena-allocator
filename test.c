@@ -45,20 +45,20 @@ void test_arena_create(void)
 }
 
 
-void test_arena_realloc(void)
+void test_arena_expand(void)
 {
     Arena *arena = arena_create(6);
     char *ptr = arena_alloc(arena, 6);
     memcpy(ptr, "Hello\0", 6);
-    arena = arena_realloc(arena, 12);
+    arena = arena_expand(arena, 12);
     TEST_EQUAL(arena->size, 12);
     TEST_EQUAL(arena->index, 6);
     TEST_ARRAY_EQUAL(arena->region, "Hello\0", 6);
 
-    TEST_NULL(arena_realloc(NULL, 0));
-    TEST_NULL(arena_realloc(arena, 0));
-    TEST_NULL(arena_realloc(NULL, 13));
-    TEST_NULL(arena_realloc(arena, 12));
+    TEST_NULL(arena_expand(NULL, 0));
+    TEST_NULL(arena_expand(arena, 0));
+    TEST_NULL(arena_expand(NULL, 13));
+    TEST_NULL(arena_expand(arena, 12));
 
     arena_destroy(arena);
 }
@@ -232,7 +232,7 @@ void test_arena_delete_allocation_list(void)
 int main(void)
 {
     SUITE(test_arena_create, "Arena creation suite");
-    SUITE(test_arena_realloc, "Arena reallocation suite");
+    SUITE(test_arena_expand, "Arena reallocation suite");
     SUITE(test_arena_alloc, "Arena unaligned allocation suite");
     SUITE(test_arena_alloc_aligned, "Arena aligned allocation suite");
     SUITE(test_arena_copy, "Arena copy suite");

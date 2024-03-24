@@ -113,7 +113,7 @@ Parameters
   size_t size     |    The size the arena's region is
                        being changed to
 */
-Arena* arena_realloc(Arena *arena, size_t size);
+Arena* arena_expand(Arena *arena, size_t size);
 
 
 /*
@@ -305,7 +305,7 @@ Arena* arena_create(size_t size)
 }
 
 
-Arena* arena_realloc(Arena *arena, size_t size)
+Arena* arena_expand(Arena *arena, size_t size)
 {
     if(arena == NULL || size <= arena->size)
     {
