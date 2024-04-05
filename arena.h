@@ -7,21 +7,31 @@ QUICK USAGE:
   following before including "arena.h", replacing
   the macro values appropriately when desired.
 
-```
-#define ARENA_IMPLEMENTATION
+        ```
+        #define ARENA_IMPLEMENTATION
 
-// All of these are optional
-#define ARENA_MALLOC <stdlib_malloc_like_allocator>
-#define ARENA_FREE <stdlib_free_like_deallocator>
-#define ARENA_MEMCPY <stdlib_memcpy_like_copier>
+        // All of these are optional
+        #define ARENA_MALLOC <stdlib_malloc_like_allocator>
+        #define ARENA_FREE <stdlib_free_like_deallocator>
+        #define ARENA_MEMCPY <stdlib_memcpy_like_copier>
+        #define ARENA_REALLOC <stdlib_realloc_like_reallocator>
 
-// for debug functionality, you can also do:
-#define ARENA_DEBUG
+        // for debug functionality, you can also do:
+        #define ARENA_DEBUG
 
-// If you would like to change the default alignment for
-// allocations, you can define:
-#define ARENA_DEFAULT_ALIGNMENT <alignment_value>
-```
+        // If you would like to change the default alignment for
+        // allocations, you can define:
+        #define ARENA_DEFAULT_ALIGNMENT <alignment_value>
+        ```
+
+  There is also a C89-friendly macro for
+  determining the alignment of a type.
+        ```
+        ARENA_ALIGNOF(type)
+        ```
+  This evaluates to C11 alignof(type) when compiled
+  for C11 or later, but also allows the same
+  behavior for C89 and C99
 
   After doing that, you can `#include "arena.h"`
   And for any other file in any other translation
