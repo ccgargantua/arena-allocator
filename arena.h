@@ -284,20 +284,20 @@ Arena* arena_create(size_t size)
 {
     Arena *arena;
 
-    if(size == 0)
+    if (size == 0)
     {
         return NULL;
     }
 
     /* A malloc of 0 is implementation defined, so the above check is necessary */
     arena = ARENA_MALLOC(sizeof(Arena));
-    if(arena == NULL)
+    if (arena == NULL)
     {
         return NULL;
     }
 
     arena->region = ARENA_MALLOC(size);
-    if(arena->region == NULL)
+    if (arena->region == NULL)
     {
         ARENA_FREE(arena);
         return NULL;
@@ -317,13 +317,13 @@ Arena* arena_create(size_t size)
 
 Arena* arena_expand(Arena *arena, size_t size)
 {
-    if(arena == NULL || size <= arena->size)
+    if (arena == NULL || size <= arena->size)
     {
         return NULL;
     }
 
     arena->region = ARENA_REALLOC(arena->region, size);
-    if(arena->region == NULL)
+    if (arena->region == NULL)
     {
         return NULL;
     }
@@ -343,20 +343,20 @@ void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment)
 {
     unsigned int offset;
 
-    if(size == 0)
+    if (size == 0)
     {
         return NULL;
     }
 
-    if(arena == NULL || arena->region == NULL)
+    if (arena == NULL || arena->region == NULL)
     {
         return NULL;
     }
 
-    if(alignment != 0)
+    if (alignment != 0)
     {
         offset = (size_t)(arena->region + arena->index) % alignment;
-        if(offset > 0)
+        if (offset > 0)
         {
             arena->index = arena->index - offset + alignment;
         }
@@ -366,7 +366,7 @@ void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment)
         offset = 0;
     }
 
-    if(arena->size - (arena->index + offset) < size)
+    if (arena->size - (arena->index + offset) < size)
     {
         return NULL;
     }
@@ -384,12 +384,12 @@ ARENA_INLINE size_t arena_copy(Arena *dest, Arena *src)
 {
     size_t bytes;
 
-    if(dest == NULL || src == NULL)
+    if (dest == NULL || src == NULL)
     {
         return 0;
     }
 
-    if(src->index < dest->size)
+    if (src->index < dest->size)
     {
         bytes = src->index;
     }
@@ -407,7 +407,7 @@ ARENA_INLINE size_t arena_copy(Arena *dest, Arena *src)
 
 ARENA_INLINE void arena_clear(Arena *arena)
 {
-    if(arena == NULL)
+    if (arena == NULL)
     {
         return;
     }
@@ -422,7 +422,7 @@ ARENA_INLINE void arena_clear(Arena *arena)
 
 ARENA_INLINE void arena_destroy(Arena *arena)
 {
-    if(arena == NULL)
+    if (arena == NULL)
     {
         return;
     }
@@ -431,7 +431,7 @@ ARENA_INLINE void arena_destroy(Arena *arena)
     arena_delete_allocation_list(arena);
     #endif /* ARENA_DEBUG */
 
-    if(arena->region != NULL)
+    if (arena->region != NULL)
     {
         ARENA_FREE(arena->region);
     }
@@ -446,15 +446,15 @@ Arena_Allocation* arena_get_allocation_struct(Arena *arena, void *ptr)
 {
     Arena_Allocation *current;
 
-    if(arena == NULL || ptr == NULL)
+    if (arena == NULL || ptr == NULL)
     {
         return NULL;
     }
 
     current = arena->head_allocation;
-    while(current != NULL)
+    while (current != NULL)
     {
-        if(current->pointer == (char *)ptr)
+        if (current->pointer == (char *)ptr)
         {
             return current;
         }
@@ -467,12 +467,12 @@ Arena_Allocation* arena_get_allocation_struct(Arena *arena, void *ptr)
 
 void arena_add_allocation(Arena *arena, size_t size)
 {
-    if(arena == NULL)
+    if (arena == NULL)
     {
         return;
     }
 
-    if(arena->head_allocation == NULL)
+    if (arena->head_allocation == NULL)
     {
         arena->head_allocation = malloc(sizeof(Arena_Allocation));
         arena->head_allocation->index = arena->index;
@@ -483,7 +483,7 @@ void arena_add_allocation(Arena *arena, size_t size)
     else
     {
         Arena_Allocation *current = arena->head_allocation;
-        while(current->next != NULL)
+        while (current->next != NULL)
         {
             current = current->next;
         }
@@ -501,12 +501,12 @@ void arena_add_allocation(Arena *arena, size_t size)
 
 void arena_delete_allocation_list(Arena *arena)
 {
-    if(arena == NULL)
+    if (arena == NULL)
     {
         return;
     }
 
-    while(arena->head_allocation != NULL)
+    while (arena->head_allocation != NULL)
     {
         Arena_Allocation *next = arena->head_allocation->next;
         free(arena->head_allocation);
