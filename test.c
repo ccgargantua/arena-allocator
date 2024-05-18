@@ -30,6 +30,13 @@
 #include "test.h"
 
 
+#define ARENA_DEBUG
+#define ARENA_IMPLEMENTATION
+#define ARENA_SUPPRESS_MALLOC_WARN
+#define ARENA_DEFAULT_ALIGNMENT 0
+#include "arena.h"
+
+
 void test_arena_create(void)
 {
     Arena *arena = arena_create(0);
@@ -231,17 +238,17 @@ void test_arena_delete_allocation_list(void)
 
 int main(void)
 {
-    SUITE(test_arena_create, "Arena creation suite");
-    SUITE(test_arena_expand, "Arena reallocation suite");
-    SUITE(test_arena_alloc, "Arena unaligned allocation suite");
-    SUITE(test_arena_alloc_aligned, "Arena aligned allocation suite");
-    SUITE(test_arena_copy, "Arena copy suite");
-    SUITE(test_arena_clear, "Arena clearing suite");
-    SUITE(test_arena_get_allocation_struct, "Arena debug method 'arena_get_allocation_struct' suite");
-    SUITE(test_arena_add_allocation, "Arena debug method 'arena_add_allocation' suite");
-    SUITE(test_arena_delete_allocation_list, "Arena debug method 'arena_delete_allocation_list' suite");
+    SUITE(test_arena_create);
+    SUITE(test_arena_expand);
+    SUITE(test_arena_alloc);
+    SUITE(test_arena_alloc_aligned);
+    SUITE(test_arena_copy);
+    SUITE(test_arena_clear);
+    SUITE(test_arena_get_allocation_struct);
+    SUITE(test_arena_add_allocation);
+    SUITE(test_arena_delete_allocation_list);
 
-    fprintf(stderr, "\nFinished. Passed %d/%d tests.\n", passed_tests, total_tests);
+    WRAP_UP();
 
     return 0;
 }
