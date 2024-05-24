@@ -248,13 +248,6 @@ QUICK USAGE:
 #include <stddef.h>
 
 
-#if __STDC_VERSION__ >= 199901L && !defined(ARENA_DEBUG)
-    #define ARENA_INLINE extern inline
-#else
-    #define ARENA_INLINE
-#endif /* __STDC_VERSION__ >= 199901L */
-
-
 #if __STDC_VERSION__ >= 201112L
     #include <stdalign.h>
     #define ARENA_ALIGNOF(type) alignof(type)
@@ -348,7 +341,7 @@ Return:
   Pointer to arena region segment on success, NULL on
   failure.
 */
-ARENA_INLINE void* arena_alloc(Arena *arena, size_t size);
+void* arena_alloc(Arena *arena, size_t size);
 
 
 /*
@@ -389,7 +382,7 @@ Parameters:
 Return:
   Number of bytes copied.
 */
-ARENA_INLINE size_t arena_copy(Arena *dest, Arena *src);
+size_t arena_copy(Arena *dest, Arena *src);
 
 
 /*
@@ -400,7 +393,7 @@ realloc or frees.
 Parameters:
   Arena *arena    |    The arena to be cleared.
 */
-ARENA_INLINE void arena_clear(Arena* arena);
+void arena_clear(Arena* arena);
 
 
 /*
@@ -409,7 +402,7 @@ Free the memory allocated for the entire arena region.
 Parameters:
   Arena *arena    |    The arena to be destroyed.
 */
-ARENA_INLINE void arena_destroy(Arena *arena);
+void arena_destroy(Arena *arena);
 
 
 #ifdef ARENA_DEBUG
@@ -534,7 +527,7 @@ Arena* arena_expand(Arena *arena, size_t size)
 }
 
 
-ARENA_INLINE void* arena_alloc(Arena *arena, size_t size)
+void* arena_alloc(Arena *arena, size_t size)
 {
     return arena_alloc_aligned(arena, size, ARENA_DEFAULT_ALIGNMENT);
 }
@@ -581,7 +574,7 @@ void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment)
 }
 
 
-ARENA_INLINE size_t arena_copy(Arena *dest, Arena *src)
+size_t arena_copy(Arena *dest, Arena *src)
 {
     size_t bytes;
 
@@ -606,7 +599,7 @@ ARENA_INLINE size_t arena_copy(Arena *dest, Arena *src)
 }
 
 
-ARENA_INLINE void arena_clear(Arena *arena)
+void arena_clear(Arena *arena)
 {
     if (arena == NULL)
     {
@@ -621,7 +614,7 @@ ARENA_INLINE void arena_clear(Arena *arena)
 }
 
 
-ARENA_INLINE void arena_destroy(Arena *arena)
+void arena_destroy(Arena *arena)
 {
     if (arena == NULL)
     {
