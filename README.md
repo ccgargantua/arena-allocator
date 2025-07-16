@@ -506,7 +506,7 @@ Outside of addressing bugs and feature requests, fulfilling a feature request or
 
 The tests must also pass through valgrind leak-free, and `arena.h` **must** be C89 compliant*. You should check this using the `Makefile`, but if for some reason you can't or don't want to, compile `test.c` with
 
-(See note in #c89-compliance)
+(See note in [C89-Compliance](#c89-compliance))
 
 ```
 -Werror -Wall -Wextra -Wstrict-prototypes -Wold-style-definition -Wmissing-prototypes -Wmissing-declarations -Wdeclaration-after-statement
