@@ -37,7 +37,7 @@ You can learn more about arena/zone/region allocators by reading this [fantastic
 
 ### C89 Compliance
 
-I'll keep this short. I am maintaining C89 compliance for fun, not because I use it. I personally am a C11 enjoyer. If you think C89 is the only way, well, good for you! But you're wrong.
+I'll keep this short. This is not completely C89 compliant due to representing pointers as integers, something that cannot be done if strictly following C89 due to lack of `uintptr_t` I am maintaining C89 compliance for fun, not because I use it. I personally am a C11 enjoyer. If you think C89 is the only way, well, good for you! But you're wrong.
 
 ### Single-Header Libraries
 
@@ -504,7 +504,9 @@ If you change `arena.h` whatsoever, **run the tests before opening a PR**. If yo
 
 Outside of addressing bugs and feature requests, fulfilling a feature request or bug fix for functionality within `arena.h` permits modifying or adding relevant testing code within `test.c`, and you must do so if you want your PR to be acknowledged. There is documentation for testing code within `test.c` at the top of the file in the form of comments.
 
-The tests must also pass through valgrind leak-free, and `arena.h` **must** be C89 compliant. You should check this using the `Makefile`, but if for some reason you can't or don't want to, compile `test.c` with
+The tests must also pass through valgrind leak-free, and `arena.h` **must** be C89 compliant*. You should check this using the `Makefile`, but if for some reason you can't or don't want to, compile `test.c` with
+
+(See note in #c89-compliance)
 
 ```
 -Werror -Wall -Wextra -Wstrict-prototypes -Wold-style-definition -Wmissing-prototypes -Wmissing-declarations -Wdeclaration-after-statement
