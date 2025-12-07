@@ -248,7 +248,7 @@ While I do believe software should be open source, I don't believe it would ethi
    See the License for the specific language governing permissions and
    limitations under the License.
 
-   Copyright 2024 Carter Dugan
+   Copyright 2026 Carter Dugan
 ```
 
 ---
@@ -286,6 +286,20 @@ There are two structs defined in `arena.h`. This lists each one along with its m
 
 ### Functions and macros
 ```c
+/*
+Initialize an arena object with pointers to the arena and a
+pre-allocated region, as well as the size of the provided
+region. Good for using the stack instead of the heap, if you
+so desire.
+
+Parameters:
+  Arena *arena    |   The arena object being initialized.
+  void *region    |   The region to be arena-fyed.
+  size_t size     |   The size of the region in bytes.
+*/
+void arena_init(Arena *arena, void *region, size_t size);
+
+
 /*
 Allocate and return a pointer to memory to the arena
 with a region with the specified size. Providing a
@@ -368,7 +382,7 @@ ARENA_INLINE size_t arena_copy(Arena *dest, Arena *src);
 /*
 Reset the pointer to the arena region to the beginning
 of the allocation. Allows reuse of the memory without
-realloc or frees.
+expensive frees.
 
 Parameters:
   Arena *arena    |    The arena to be cleared.
@@ -478,7 +492,13 @@ The tests and examples were compiled and successfully run on the following opera
 
 ## Contributing
 
+### RESTRICTED UNTIL ISSUE #18 IS RESOLVED
+
+I recently cleaned up the project. Things were tested... semi-thoroughly. But I haven't re-written the tests, so while the code is production-ready, it is *not* open to any contributions aside from issue #18 until that is resolved. If you want to write the rest of the tests in `tests.c`, go for it. I'll get to it eventually...
+
 ### Basic Guidelines
+
+RESTRICTED UNTIL ISSUE #18 IS RESOLVED
 
 This project has very simple guidelines for contributing.
 
@@ -490,6 +510,8 @@ This project has very simple guidelines for contributing.
 
 ### Modifications to `arena.h`
 
+RESTRICTED UNTIL ISSUE #18 IS RESOLVED
+
 At the moment there is no documentation for the code style, but it should be relatively simple enough to pick up on through reading existing code for most things. If you are having trouble, feel free to open an issue for a FR. If it already exists, comment on it describing what you are confused by.
 
 * If you modify `arena.h` whatsoever, you must run the tests. See the next section.
@@ -499,6 +521,8 @@ At the moment there is no documentation for the code style, but it should be rel
 * If you add a feature within `arena.h`, you must *should* an adequate example in `code_examples/` **and** add it to the `makefile`, but it is not required.
 
 ### Testing
+
+This library uses [rktest](https://github.com/Warwolt/rktest) for testing.
 
 If you change `arena.h` whatsoever, **run the tests before opening a PR**. If you open a PR with modifictions to the code and the tests don't all pass, make a comment on your PR stating which test you believe is wrong and is preventing you from passing all of the tests. If any test fails and your PR doesn't have a comment that claims to correct a failed test, your PR will be ignored closed.
 
@@ -522,39 +546,4 @@ As I said, you can do all of this with the `Makefile`
 
 ```
 $ make test
-```
-
-### Code Style
-
-* **Identifiers**
-  * **Variables** should be lowercase and snake case, eg `variable_name`. For **pointers**, the asterisk (`*`) should be attached to the variable name, not the type, eg `type *variable_name`.
-  * **Functions**, like variables, should be lowercase and snake case, eg `type function_name(p1, p2, ...)`. In the case of pointers, the asterisk (`*`) should be attached to the type for density, eg `type* function_name(p1, p2, ...)`. Functions should have a forward declaration with a comment for documentation above it around the top of the file, make sure the order relative to other functions is consistent.
-  * **Struct, enum, and union** identifiers should be pascal case, eg `struct StructName`. They should be typedef'd and located around the top of the header file.
-  * **Macros** should be all caps and snakecase, beginning with `ARENA_`, eg `ARENA_MACRO_NAME`. **Please avoid adding macros without consulting me first**. Feel free to make changes to existing macros, though.
-
-* **White space** is based on relevance of a line of code to those around it. If you don't understand what these points mean, please look at the code. It should be formatted as follows:
-  * A single newline separating closely related code.
-  * Two newlines separating unrelated code within the same scope or tag type.
-  * Three newlines separating code within different function scopes, tag types, and blocks of preprocessor directives.
-
-* **Error checking** should be done whenever possible and mimic the behavior of standard library implementations, such as returning `NULL` on error in functions that return pointers or returning integer error values from integer functions. You should use **early error checking**, which means checking for errors as soon as they could be produced, eg. checking for a `NULL` returned after a failed `malloc` call.
-
-* **Comments** should describe *why* you did something, not *what* it is that you did. In other words, your code should be self-explanatory. Documentation for functions in the form of comments should be located above the function in the following format:
-
-```c
-/*
-Description of function, description of function description of function.
-Description of function description of function, description of function
-description of function.
-
-Parameters:
-  paramter1_type paramter1_name    |    Description of parameter 1, description
-                                        of parameter one description of paramter
-                                        1.
-  paramter2_type paramter2_name    |    Description of parameter 2, description
-                                        of parameter one description of paramter
-                                        2.
-Return:
-  Description of return value, description of return value description of return value.
-*/
 ```

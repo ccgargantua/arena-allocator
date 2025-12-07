@@ -56,3 +56,5 @@ test
 test.exe
 gdb.txt
 *.geany
+
+.idea/
