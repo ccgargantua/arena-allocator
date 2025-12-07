@@ -492,7 +492,13 @@ The tests and examples were compiled and successfully run on the following opera
 
 ## Contributing
 
+### RESTRICTED UNTIL ISSUE #18 IS RESOLVED
+
+I recently cleaned up the project. Things were tested... semi-thoroughly. But I haven't re-written the tests, so while the code is production-ready, it is *not* open to any contributions aside from issue #18 until that is resolved. If you want to write the rest of the tests in `tests.c`, go for it. I'll get to it eventually...
+
 ### Basic Guidelines
+
+RESTRICTED UNTIL ISSUE #18 IS RESOLVED
 
 This project has very simple guidelines for contributing.
 
@@ -503,6 +509,8 @@ This project has very simple guidelines for contributing.
  * For any **anything else**, open an issue and we will discuss it.
 
 ### Modifications to `arena.h`
+
+RESTRICTED UNTIL ISSUE #18 IS RESOLVED
 
 At the moment there is no documentation for the code style, but it should be relatively simple enough to pick up on through reading existing code for most things. If you are having trouble, feel free to open an issue for a FR. If it already exists, comment on it describing what you are confused by.
 
