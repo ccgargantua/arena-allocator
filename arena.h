@@ -602,7 +602,7 @@ void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment)
         offset = 0;
     }
 
-    if (arena->size - (arena->index + offset) < size)
+    if (arena->size - arena->index < size)
     {
         return NULL;
     }

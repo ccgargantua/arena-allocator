@@ -47,3 +47,18 @@ TEST(arena_alloc_tests, basic)
 	EXPECT_LONG_EQ(arena.index, 8);
 	EXPECT_LONG_EQ(arena.allocations, 1);
 }
+
+
+TEST(arena_alloc_aligned_tests, edge_case_tight_space)
+{
+	char region[30];
+	Arena arena;
+	arena_init(&arena, region, 30);
+	arena.index = 10;
+
+	void *ptr = arena_alloc_aligned(&arena, 14, 16);
+
+	ASSERT_TRUE(ptr != NULL);
+	EXPECT_LONG_EQ(arena.index, 30);
+	EXPECT_LONG_EQ(arena.allocations, 1);
+}
