@@ -1,5 +1,5 @@
 # Arena Allocator
-Single-header arena allocator. C89 Compatible.
+Single-header arena allocator. C89 Compatible (in most cases).
 
 ---
 
