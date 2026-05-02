@@ -591,21 +591,20 @@ void* arena_alloc_aligned(Arena *arena, size_t size, unsigned int alignment)
 
     if (alignment != 0)
     {
-        offset = (size_t)(arena->region + arena->index) % alignment;
-        if (offset > 0)
-        {
-            arena->index = arena->index - offset + alignment;
-        }
+        offset = alignment - (size_t)(arena->region + arena->index) % alignment;
+        offset = offset == alignment ? 0 : offset;
     }
     else
     {
         offset = 0;
     }
 
-    if (arena->size - arena->index < size)
+    if (arena->index + offset >= arena->size || arena->size - arena->index - offset < size)
     {
         return NULL;
     }
+
+    arena->index += offset;
 
     #ifdef ARENA_DEBUG
     arena_add_allocation(arena, size);
